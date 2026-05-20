@@ -1,9 +1,6 @@
 # syntax=docker/dockerfile:1.6
 
-# Builder
-
 FROM node:20-slim AS builder
-
 WORKDIR /app
 
 COPY package*.json ./
@@ -14,19 +11,15 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
-# Runner
 
 FROM node:20-slim AS runner
-
-RUN useradd -m -u 1000 app
 WORKDIR /app
 
-COPY --from=builder --chown=app:app /app/.next/standalone ./
-COPY --from=builder --chown=app:app /app/.next/static     ./.next/static
+COPY --from=builder --chown=node:node /app/.next/standalone ./
+COPY --from=builder --chown=node:node /app/.next/static     ./.next/static
+RUN mkdir -p /app/public && chown -R node:node /app/public
 
-RUN mkdir -p /app/public && chown -R app:app /app/public
-
-USER app
+USER node
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
