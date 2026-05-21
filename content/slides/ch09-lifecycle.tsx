@@ -28,7 +28,7 @@ export const ch09: Chapter = {
     {
       id: "ch09-01",
       title: "Annotation",
-      eyebrow: "Where most quality comes from",
+      eyebrow: "Roboflow workflow",
       layout: "prose",
       content: (
         <div className="space-y-4">
@@ -115,7 +115,7 @@ Stratifier(
     {
       id: "ch09-04a",
       title: "Why augment",
-      eyebrow: "More data, for free",
+      eyebrow: "Three benefits at once",
       layout: "prose",
       content: (
         <div className="space-y-4">
@@ -232,7 +232,7 @@ Stratifier(
     {
       id: "ch09-06",
       title: "Training",
-      eyebrow: "Adam · TensorBoard · HuggingFace",
+      eyebrow: "End-to-end",
       layout: "split",
       content: (
         <div className="space-y-4">
@@ -368,7 +368,7 @@ result = detector.train(TrainingConfig(
     {
       id: "ch09-10",
       title: "Common failure modes",
-      eyebrow: "Read the curves like an X-ray",
+      eyebrow: "Loss curves",
       layout: "fullViz",
       viz: <FailureModes />,
     },

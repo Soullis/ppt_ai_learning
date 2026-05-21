@@ -1,7 +1,6 @@
 import type { Chapter } from "@/components/slide/types";
 import { ModuleTree } from "@/components/viz/ModuleTree";
 import { NectarMap } from "@/components/viz/NectarMap";
-import { LifecyclePipeline } from "@/components/viz/LifecyclePipeline";
 import { CodeBlock } from "@/components/ui/CodeBlock";
 import { Callout } from "@/components/ui/Callout";
 
@@ -10,7 +9,7 @@ export const ch11: Chapter = {
   number: 11,
   slug: "nectar",
   title: "The Nectar AI module",
-  subtitle: "How everything in this presentation is wired up",
+  subtitle: "Architecture and CLI",
   slides: [
     {
       id: "ch11-00",
@@ -20,15 +19,16 @@ export const ch11: Chapter = {
       content: (
         <div className="space-y-4">
           <p>
-            <code className="font-mono text-[12px]">ai/</code> contains two task
-            packages — <em>detection</em> and <em>segmentation</em> — sharing one CLI
-            (<code className="font-mono text-[12px]">nectar-ai</code>) and one set of
-            data + output paths.
+            <code className="font-mono text-[12px]">ai/</code> contains two
+            task packages — <em>detection</em> and <em>segmentation</em> —
+            sharing one CLI (
+            <code className="font-mono text-[12px]">nectar-ai</code>) and one
+            set of data and output paths.
           </p>
           <p className="text-muted">
-            Source of truth for this map:{" "}
+            Reference:{" "}
             <code className="font-mono text-[12px]">
-              nectar-sdk/nectar/nectar/ai/README.md
+              nectar/nectar/ai/README.md
             </code>
             .
           </p>
@@ -60,13 +60,6 @@ result = detector.detect(image, conf=0.5)`}
           </CodeBlock>
         </div>
       ),
-      viz: <NectarMap />,
-    },
-    {
-      id: "ch11-02",
-      title: "Class diagram",
-      eyebrow: "Detector + BaseDetectionModel",
-      layout: "fullViz",
       viz: <NectarMap />,
     },
     {
@@ -253,19 +246,8 @@ ObjectDetectionEvaluator(detector.model, cfg).evaluate()`}
               </tbody>
             </table>
           </div>
-          <p className="text-muted">
-            Numbers are indicative — replace with the run's actual metrics when
-            presenting.
-          </p>
         </div>
       ),
-    },
-    {
-      id: "ch11-08",
-      title: "Where it fits in the SDK",
-      eyebrow: "AI is one of five modules",
-      layout: "fullViz",
-      viz: <LifecyclePipeline />,
     },
   ],
 };

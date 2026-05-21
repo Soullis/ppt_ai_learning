@@ -116,8 +116,8 @@ export const ch03: Chapter = {
             </li>
           </ul>
           <Callout>
-            We use HSV-space k-means on Black Bee for fast colour calibration
-            in the vision module.
+            In Nectar we use k-means in HSV space to calibrate colour
+            thresholds for ArUco / line detection — no labels needed.
           </Callout>
         </div>
       ),
@@ -152,9 +152,10 @@ export const ch03: Chapter = {
               built modern LLMs
             </li>
           </ul>
-          <Callout label="Why it matters" tone="accent">
-            Aerial footage is abundant, labelled boxes are not — self-supervised
-            pretraining turns that asymmetry into a head start.
+          <Callout tone="accent">
+            For us this matters because flight footage is plentiful while
+            labelled boxes are expensive. Pretraining on unlabelled video and
+            fine-tuning on a small labelled set is a real practical option.
           </Callout>
         </div>
       ),

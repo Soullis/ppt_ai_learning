@@ -109,9 +109,8 @@ export const ch06: Chapter = {
             to small translations.
           </p>
           <p className="text-muted">
-            Modern detectors (YOLOv8+, DETR) often replace pooling with
-            strided convolution or attention pooling, but the operation is
-            still the cleanest way to introduce the idea.
+            Modern detectors (YOLOv8+, DETR) tend to replace pooling with
+            strided convolution or learned downsampling.
           </p>
         </div>
       ),
@@ -125,9 +124,8 @@ export const ch06: Chapter = {
       content: (
         <div className="space-y-4">
           <p>
-            The recipe stayed remarkably stable from{" "}
-            <strong>LeNet-5</strong> (LeCun, 1998) through{" "}
-            <strong>AlexNet</strong> (Krizhevsky et al., 2012):
+            The same recipe carries from <strong>LeNet-5</strong> (LeCun,
+            1998) through <strong>AlexNet</strong> (Krizhevsky et al., 2012):
           </p>
           <div className="rounded-md border border-stroke bg-surface px-5 py-4 font-mono text-[12px] leading-relaxed text-ink">
             input
@@ -243,12 +241,12 @@ export const ch06: Chapter = {
           <p>
             Plain RNNs struggle with long ranges (vanishing gradients).{" "}
             <strong>LSTM</strong> and <strong>GRU</strong> add gates that
-            decide what to keep, what to forget, and what to read out — the
-            same recurrence, with discipline.
+            decide what to keep, what to forget, and what to read out.
           </p>
           <p className="text-muted">
-            Replaced almost everywhere by transformers, but still appear in
-            tiny edge models and as a useful mental model.
+            Transformers replaced RNNs in most large-scale applications, but
+            gated recurrence is still common in tiny edge models and streaming
+            inference.
           </p>
         </div>
       ),

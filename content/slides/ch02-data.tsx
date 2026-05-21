@@ -30,9 +30,9 @@ export const ch02: Chapter = {
             The fit drifts every time the noise is resampled. The dashed line is
             the truth; the blue line is what the model recovers.
           </p>
-          <Callout label="In practice" tone="warm">
-            Black Bee's biggest mAP gains usually come from re-labelling, not
-            from new architectures.
+          <Callout tone="warm">
+            On a real Black Bee dataset, re-labelling the noisy examples often
+            moves mAP more than swapping the architecture.
           </Callout>
         </div>
       ),
@@ -124,14 +124,13 @@ export const ch02: Chapter = {
       content: (
         <div className="space-y-4">
           <p>
-            Doubling annotation does not double accuracy. The first thousand
+            Doubling annotation rarely doubles accuracy. The first thousand
             labels buy most of the gain; later labels pay diminishing returns
             unless they target rare cases or new conditions.
           </p>
-          <MBlock>{"\\text{mAP}(N) \\approx \\text{mAP}_\\infty\\,\\big(1 - e^{-N/N_0}\\big)"}</MBlock>
           <p className="text-muted">
-            Spend hours on hard frames, not easy ones — chapter 9 returns to this
-            with active augmentation and rare-class prioritisation.
+            Spend annotation hours on hard frames, not easy ones — chapter 9
+            returns to this with rare-class prioritisation.
           </p>
         </div>
       ),

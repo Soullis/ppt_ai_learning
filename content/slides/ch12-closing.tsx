@@ -1,5 +1,4 @@
 import type { Chapter } from "@/components/slide/types";
-import { Callout } from "@/components/ui/Callout";
 
 export const ch12: Chapter = {
   id: "ch12",
@@ -42,48 +41,10 @@ export const ch12: Chapter = {
     },
     {
       id: "ch12-01",
-      title: "Where AI sits in the Black Bee roadmap",
-      eyebrow: "What is next",
-      layout: "prose",
-      content: (
-        <div className="space-y-4">
-          <p>
-            We covered detection because that is what we use today. The same SDK is
-            being extended to:
-          </p>
-          <ul className="space-y-2 text-[15px]">
-            <li>
-              · <strong>Segmentation</strong> for free-space mapping during landing.
-            </li>
-            <li>
-              · <strong>Self-supervised pretraining</strong> on raw flight footage to
-              reduce labelling cost.
-            </li>
-            <li>
-              · <strong>On-device retraining</strong> per-mission, per-environment.
-            </li>
-            <li>
-              · <strong>Vision-language models</strong> for higher-level mission
-              instructions.
-            </li>
-          </ul>
-          <Callout label="Hardware ↔ software" tone="warm">
-            The hardware team designs the eyes; the software team teaches them to
-            see. Same problem, opposite ends.
-          </Callout>
-        </div>
-      ),
-    },
-    {
-      id: "ch12-02",
       title: "Questions",
       eyebrow: "Discussion",
       layout: "title",
-      content: (
-        <p className="font-serif text-2xl text-muted">
-          Ask anything. The slides are here in the room.
-        </p>
-      ),
+      content: null,
     },
   ],
 };

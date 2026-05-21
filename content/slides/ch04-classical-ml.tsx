@@ -14,7 +14,7 @@ export const ch04: Chapter = {
   number: 4,
   slug: "classical-ml",
   title: "Classical machine learning",
-  subtitle: "The methods deep learning sits on top of",
+  subtitle: "Linear models, trees, kernels, clusters",
   slides: [
     {
       id: "ch04-00",
@@ -33,9 +33,9 @@ export const ch04: Chapter = {
             sliders; the yellow rays are residuals — their squared lengths sum to
             the MSE.
           </p>
-          <Callout label="Why we start here" tone="accent">
-            Linear regression is the smallest model that already shows every
-            piece we'll see in deep learning: parameters, a loss, an optimiser.
+          <Callout tone="accent">
+            Linear regression already has every piece of a neural network in
+            miniature — parameters, a loss, an optimiser.
           </Callout>
         </div>
       ),
@@ -136,8 +136,8 @@ export const ch04: Chapter = {
             <li>· Distance metric matters; standardise features first.</li>
           </ul>
           <p className="text-muted">
-            Conceptually clean, computationally heavy, and the gold-standard
-            baseline to beat.
+            Simple and useful as a baseline, but inference cost grows linearly
+            with the dataset and quality degrades with the dimension.
           </p>
         </div>
       ),

@@ -24,18 +24,19 @@ export const ch08: Chapter = {
       content: (
         <div className="space-y-4">
           <p>
-            For each image, a variable-length list of <em>(box, class, confidence)</em>.
-            Variable length is what makes the problem interesting.
+            For each image, a variable-length list of{" "}
+            <em>(box, class, confidence)</em>. Three design questions follow
+            from that one fact:
           </p>
           <ul className="space-y-2 text-[15px]">
             <li>· How many boxes to output?</li>
             <li>· Which prediction matches which ground truth?</li>
             <li>· How to merge nearby duplicate boxes?</li>
           </ul>
-          <Callout>
-            Different families answer these three questions differently. That is the
-            story of the chapter.
-          </Callout>
+          <p className="text-muted">
+            Different families of detectors answer these three questions in
+            different ways.
+          </p>
         </div>
       ),
       viz: <MaskOverlay mode="detection" />,

@@ -73,11 +73,12 @@ export const ch05: Chapter = {
             data with a hyperplane — fine for linearly separable problems,
             useless for the moons we saw in chapter 4.
           </p>
-          <Callout label="The unlock">
-            Stack neurons in <em>layers</em> with non-linear activations between
-            them. Each layer can learn features built from the previous layer's
-            outputs.
-          </Callout>
+          <p>
+            What makes a network more than a logistic regression is{" "}
+            <strong>layers</strong> of neurons with a non-linear activation
+            between them. Each layer can learn features built from the
+            previous layer&apos;s outputs.
+          </p>
         </div>
       ),
     },
@@ -118,13 +119,9 @@ export const ch05: Chapter = {
           <MBlock>{"h^{(\\ell)} = \\phi\\!\\big(W^{(\\ell)} h^{(\\ell-1)} + b^{(\\ell)}\\big)"}</MBlock>
           <p>
             Two layers can already approximate any continuous function on a
-            bounded domain (universal approximation), but in practice depth is
-            far more parameter-efficient than width.
+            bounded domain (universal approximation, Cybenko 1989), but in
+            practice depth is far more parameter-efficient than width.
           </p>
-          <Callout>
-            The hidden layer pulses on the right show how activations propagate
-            forward layer-by-layer.
-          </Callout>
         </div>
       ),
       viz: <NeuronNetwork layers={[3, 5, 4, 2]} />,
@@ -280,21 +277,20 @@ export const ch05: Chapter = {
       content: (
         <div className="space-y-4">
           <p>
-            One wide hidden layer can in principle approximate any continuous
-            function (Cybenko, 1989). In practice, depth lets each layer build
-            features on top of the previous one — edges → textures → parts →
-            objects.
+            One wide hidden layer can approximate any continuous function in
+            principle. In practice, depth lets each layer build features on
+            top of the previous one — edges → textures → parts → objects.
           </p>
           <p>
-            Empirically, doubling the depth of a residual network costs less
-            than doubling the width and learns better features. ResNet-152 is
-            not deep for fashion; it is deep because deep works.
+            Doubling the depth of a residual network costs fewer parameters
+            than doubling the width and learns better features. That is why
+            ResNet-152 has 152 layers and not one very wide one.
           </p>
-          <Callout label="Lesson" tone="accent">
-            Architecture is half the battle: matching the inductive bias of the
-            model to the data — convolutions for images, attention for
-            sequences. Chapter 6 unpacks the building blocks.
-          </Callout>
+          <p className="text-muted">
+            Choosing the right architecture matters as much as choosing the
+            optimiser: convolutions for images, attention for sequences,
+            recurrence for streaming. Chapter 6 covers each.
+          </p>
         </div>
       ),
     },

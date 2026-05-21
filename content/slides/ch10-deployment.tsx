@@ -187,8 +187,10 @@ export const ch10: Chapter = {
       content: (
         <div className="space-y-4">
           <p>
-            One node consumes camera frames, runs the detector, and publishes detection
-            messages on a ROS 2 topic. Mission code subscribes and reacts.
+            One node consumes camera frames, runs the detector, and publishes
+            detection messages on a ROS 2 topic. The mission planner
+            subscribes and turns detections into goals for{" "}
+            <code className="font-mono text-[12px]">drone.move_to</code>.
           </p>
           <CodeBlock language="bash">
 {`# On the Jetson
@@ -197,12 +199,6 @@ ros2 run nectar detector_example.py --ros-args \\
     -p image_source:=realsense \\
     -p conf_threshold:=0.45`}
           </CodeBlock>
-          <p className="text-muted">
-            The mission planner subscribes to the resulting topic and turns
-            detections into goals for{" "}
-            <code className="font-mono text-[12px]">drone.move_to</code>. We just
-            taught a copter to see.
-          </p>
         </div>
       ),
     },

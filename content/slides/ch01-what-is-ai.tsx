@@ -2,7 +2,6 @@ import type { Chapter } from "@/components/slide/types";
 import { NestedVenn } from "@/components/viz/NestedVenn";
 import { Timeline } from "@/components/viz/Timeline";
 import { Radial } from "@/components/viz/Radial";
-import { Pipeline } from "@/components/viz/Pipeline";
 import { TuringTest } from "@/components/viz/TuringTest";
 import { PerceptronDiagram } from "@/components/viz/PerceptronDiagram";
 import { XORProblem } from "@/components/viz/XORProblem";
@@ -43,15 +42,10 @@ export const ch01: Chapter = {
             <strong className="font-medium">Deep learning</strong> is the subset of ML that uses
             many-layered neural networks to learn its own features.
           </p>
-          <Callout label="Working definition" tone="accent">
-            ML programs are functions <M>f_\theta : X \to Y</M> whose parameters{" "}
-            <M>\theta</M> are fit so that predictions match observed data.
-          </Callout>
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-            Read more —{" "}
-            <a className="underline" href="https://www.deeplearningbook.org/" target="_blank" rel="noreferrer">
-              Goodfellow, Bengio &amp; Courville · Deep Learning
-            </a>
+          <p>
+            More formally, an ML program is a function <M>f_\theta : X \to Y</M>{" "}
+            whose parameters <M>\theta</M> are fit so that predictions match
+            observed data.
           </p>
         </div>
       ),
@@ -127,10 +121,9 @@ export const ch01: Chapter = {
           <MBlock>{"y = \\sigma\\!\\Big(\\sum_i w_i x_i + b\\Big)"}</MBlock>
           <p>
             It is mathematically the same machine as logistic regression. The
-            neuron carves a single hyperplane through the input space. For
-            problems that <em>are</em> linearly separable, it works — and that
-            was enough for the New York Times to call it the embryo of an
-            electronic computer that would &quot;walk, talk, see, write&quot;.
+            neuron carves a single hyperplane through the input space, which
+            is enough for linearly separable problems and not enough for
+            anything else.
           </p>
           <Callout label="Reference">
             <a className="underline" href="https://psycnet.apa.org/record/1959-09865-001" target="_blank" rel="noreferrer">
@@ -149,26 +142,19 @@ export const ch01: Chapter = {
       content: (
         <div className="space-y-4">
           <p>
-            Minsky and Papert wrote a careful book called <em>Perceptrons</em>{" "}
-            and pointed out something embarrassing. The XOR function — true if{" "}
-            <em>exactly one</em> input is true — has just four points, and{" "}
-            <strong>no straight line</strong> separates the two classes.
+            Minsky and Papert's book <em>Perceptrons</em> showed that a single
+            unit cannot represent the XOR function. The four points{" "}
+            <M>{"(0,0), (0,1), (1,0), (1,1)"}</M> with labels{" "}
+            <M>{"\\{0, 1, 1, 0\\}"}</M> cannot be separated by any straight
+            line.
           </p>
           <p>
-            A single perceptron cannot solve it. The community concluded the
-            whole approach was a dead end, funding dried up, and the field
-            entered the first &quot;AI winter&quot;.
+            Funding moved elsewhere and the field entered its first "AI
+            winter". The fix would only be widely adopted fifteen years later:
+            add one hidden layer between input and output. Each hidden unit
+            carves a half-plane, the output unit combines them, and XOR
+            becomes trivial.
           </p>
-          <p>
-            What was missed at the time: stack one extra layer between input
-            and output, and the problem becomes trivial — each hidden unit
-            carves a half-plane, and the output combines them. The right panel
-            shows the fix.
-          </p>
-          <Callout label="The lesson" tone="warm">
-            One neuron is a line; many neurons in layers are arbitrary shapes.
-            Depth turns a single hyperplane into a function approximator.
-          </Callout>
         </div>
       ),
       viz: <XORProblem />,
@@ -287,19 +273,18 @@ export const ch01: Chapter = {
             adding more layers <em>hurt</em> performance.
           </p>
           <p>
-            Kaiming He&apos;s answer was disarmingly simple: add the input back
-            to the output of each block.
+            Kaiming He's fix: add the input back to the output of each block.
           </p>
           <MBlock>{"y = F(x) + x"}</MBlock>
           <p>
-            The shortcut creates a clean gradient highway. Networks of 100,
-            152, even 1000 layers train normally. ResNet won ImageNet 2015 with
-            <strong> 3.6 % top-5 error</strong> — the first time a model
-            crossed the human baseline of about 5 %.
+            The shortcut path keeps the gradient signal alive. Networks of
+            100, 152, even 1000 layers train normally. ResNet won ImageNet
+            2015 with <strong>3.6 % top-5 error</strong>, the first model to
+            cross the ~5 % human baseline.
           </p>
           <p className="text-muted">
             Almost every architecture since — including transformers — uses
-            this trick.
+            residual connections.
           </p>
           <Callout label="Reference">
             <a className="underline" href="https://arxiv.org/abs/1512.03385" target="_blank" rel="noreferrer">
@@ -449,53 +434,6 @@ export const ch01: Chapter = {
             { label: "Control", sub: "optim · RL" },
           ]}
         />
-      ),
-    },
-    {
-      id: "ch01-13",
-      title: "Where AI lives in our drone",
-      eyebrow: "Black Bee context",
-      layout: "fullViz",
-      viz: (
-        <Pipeline
-          steps={[
-            { label: "Sensors", detail: "camera · IMU · GPS" },
-            { label: "Perception", detail: "detect · segment" },
-            { label: "Decision", detail: "plan · target" },
-            { label: "Control", detail: "PID · setpoint" },
-            { label: "Actuators", detail: "motors · servos" },
-          ]}
-        />
-      ),
-    },
-    {
-      id: "ch01-14",
-      title: "What this presentation covers",
-      eyebrow: "Roadmap",
-      layout: "prose",
-      content: (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <div>
-            <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
-              Theory
-            </div>
-            <ul className="space-y-2 text-[15px]">
-              <li>· Data, paradigms, classical ML</li>
-              <li>· Deep learning foundations</li>
-              <li>· Architectural blocks: conv, attention</li>
-            </ul>
-          </div>
-          <div>
-            <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
-              Practice
-            </div>
-            <ul className="space-y-2 text-[15px]">
-              <li>· Computer vision tasks · object detection</li>
-              <li>· Training, evaluation, deployment to the edge</li>
-              <li>· The Nectar AI module, end-to-end</li>
-            </ul>
-          </div>
-        </div>
       ),
     },
   ],

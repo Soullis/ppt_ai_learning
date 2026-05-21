@@ -31,11 +31,11 @@ export const ch07: Chapter = {
             standard metrics. ImageNet (1000 classes) was the long-standing
             benchmark.
           </p>
-          <Callout label="Watch">
-            Bars on the right are the full distribution, not just the winner.
-            Image 5 is the same person as image 1 — see how the model splits
-            its mass between two classes when the appearance changes.
-          </Callout>
+          <p className="text-muted">
+            The bars on the right show the full distribution, not just the
+            argmax. Image 5 is the same person as image 1; the model splits
+            probability between two classes once the appearance changes.
+          </p>
         </div>
       ),
       viz: <ClassificationDemo />,
@@ -206,48 +206,13 @@ export const ch07: Chapter = {
             Black Bee uses this directly: the RealSense and OAK-D drivers in
             the Nectar vision module return depth alongside colour.
           </p>
-          <Callout label="Tip" tone="warm">
-            Monocular depth is up to a scale factor. Useful for ordering
-            objects, less useful for absolute distances without calibration.
+          <Callout tone="warm">
+            Monocular depth is recovered up to a scale factor — useful for
+            ordering objects, not for absolute distances without calibration.
           </Callout>
         </div>
       ),
       viz: <MaskOverlay mode="depth" />,
-    },
-    {
-      id: "ch07-07",
-      title: "Where each task fits",
-      eyebrow: "Black Bee context",
-      layout: "prose",
-      content: (
-        <div className="overflow-hidden rounded-md border border-stroke">
-          <table className="w-full border-collapse text-sm">
-            <thead>
-              <tr className="bg-bone text-left font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-                <th className="border-b border-stroke px-4 py-3">Task</th>
-                <th className="border-b border-stroke px-4 py-3">Output</th>
-                <th className="border-b border-stroke px-4 py-3">Where we use it</th>
-              </tr>
-            </thead>
-            <tbody className="text-ink">
-              {[
-                ["Classification", "1 label", "scene type, gate vs no-gate"],
-                ["Detection", "boxes + classes", "gates, drones, obstacles"],
-                ["Semantic seg.", "pixel labels", "free-space mapping"],
-                ["Instance seg.", "per-object masks", "counting, fine grasp targets"],
-                ["Keypoints", "named points", "gate corners → 6-DoF pose"],
-                ["Depth", "metres per pixel", "obstacle distance, landing"],
-              ].map((row) => (
-                <tr key={row[0]} className="border-b border-stroke last:border-b-0">
-                  {row.map((cell) => (
-                    <td key={cell} className="px-4 py-3">{cell}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ),
     },
   ],
 };
