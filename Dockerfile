@@ -17,7 +17,7 @@ WORKDIR /app
 
 COPY --from=builder --chown=node:node /app/.next/standalone ./
 COPY --from=builder --chown=node:node /app/.next/static     ./.next/static
-RUN mkdir -p /app/public && chown -R node:node /app/public
+COPY --from=builder --chown=node:node /app/public           ./public
 
 USER node
 
