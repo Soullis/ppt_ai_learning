@@ -9,8 +9,18 @@ import { RegularizationViz } from "@/components/viz/RegularizationViz";
 import { Callout } from "@/components/ui/Callout";
 import { M, MBlock } from "@/components/math/Math";
 
-// Replace with your own playground URL.
-const PLAYGROUND_URL = "https://playground.tensorflow.org/";
+const PLAYGROUNDS = [
+  {
+    name: "Neural Network Playground",
+    url: "https://playground.tensorflow.org/",
+    note: "TensorFlow · the original interactive playground",
+  },
+  {
+    name: "Samuel's NN Playground",
+    url: "https://samuellimabraz.github.io/#nn-playground",
+    note: "custom build · same idea, our notation",
+  },
+];
 
 export const ch05: Chapter = {
   id: "ch05",
@@ -131,29 +141,30 @@ export const ch05: Chapter = {
             interact is to build a tiny network in a browser and watch it
             train.
           </p>
-          <a
-            href={PLAYGROUND_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-3 rounded-md border border-ink/40 bg-surface px-5 py-3 transition hover:border-ink hover:bg-bone"
-          >
-            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
-              Open
-            </span>
-            <span className="font-serif text-lg text-ink">
-              Neural Network Playground
-            </span>
-            <span className="font-mono text-[11px] text-muted">↗</span>
-          </a>
+          <div className="flex flex-col gap-3">
+            {PLAYGROUNDS.map((p) => (
+              <a
+                key={p.url}
+                href={p.url}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-3 rounded-md border border-ink/40 bg-surface px-5 py-3 transition hover:border-ink hover:bg-bone"
+              >
+                <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
+                  Open
+                </span>
+                <span className="font-serif text-lg text-ink">{p.name}</span>
+                <span className="ml-auto font-mono text-[11px] text-muted">
+                  {p.note}
+                </span>
+                <span className="font-mono text-[11px] text-muted">↗</span>
+              </a>
+            ))}
+          </div>
           <p className="text-muted">
             Things to look for: how the spiral dataset needs ≥ 2 hidden layers;
             how ReLU vs sigmoid affects convergence; how a too-large learning
             rate explodes; how regularisation smooths the boundary.
-          </p>
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-            <span className="text-honey">tip</span> · the playground URL is a
-            constant in <code className="font-mono normal-case">ch05-deep-learning.tsx</code>; replace it with
-            your own demo.
           </p>
         </div>
       ),

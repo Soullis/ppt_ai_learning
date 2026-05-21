@@ -167,22 +167,107 @@ export const ch04: Chapter = {
     },
     {
       id: "ch04-07",
-      title: "k-means clustering",
+      title: "k-means — the algorithm",
       eyebrow: "Unsupervised baseline",
+      layout: "prose",
+      content: (
+        <div className="space-y-4">
+          <p>
+            Given <M>N</M> points <M>{"\\{x_i\\} \\subset \\mathbb{R}^d"}</M>{" "}
+            and a chosen number of clusters <M>K</M>, find an assignment{" "}
+            <M>{"r_{ik} \\in \\{0, 1\\}"}</M> and centroids{" "}
+            <M>{"\\mu_k \\in \\mathbb{R}^d"}</M> that minimise the{" "}
+            <em>within-cluster sum of squares</em> (also called inertia):
+          </p>
+          <MBlock>
+            {"J = \\sum_{i=1}^{N}\\sum_{k=1}^{K} r_{ik}\\,\\|x_i - \\mu_k\\|^2"}
+          </MBlock>
+          <p>
+            Joint minimisation over <M>r</M> and{" "}
+            <M>{"\\mu"}</M> is NP-hard. Lloyd&apos;s algorithm (1957) is the
+            workhorse heuristic — alternate two closed-form steps until
+            nothing changes:
+          </p>
+          <div className="space-y-3 rounded-md border border-stroke bg-surface px-5 py-4 text-[14px]">
+            <div>
+              <div className="mb-1 font-mono text-[11px] uppercase tracking-[0.12em] text-accent">
+                step 1 · assignment
+              </div>
+              <p className="mb-2">
+                Fix the centroids. Send each point to the closest one.
+              </p>
+              <MBlock>
+                {"r_{ik} = \\begin{cases} 1 & k = \\arg\\min_j \\|x_i - \\mu_j\\|^2 \\\\ 0 & \\text{otherwise} \\end{cases}"}
+              </MBlock>
+            </div>
+            <div>
+              <div className="mb-1 font-mono text-[11px] uppercase tracking-[0.12em] text-honey">
+                step 2 · update
+              </div>
+              <p className="mb-2">
+                Fix the assignment. Move each centroid to the mean of its
+                points (this is the value that minimises <M>J</M> for fixed{" "}
+                <M>r</M>):
+              </p>
+              <MBlock>
+                {"\\mu_k = \\frac{\\sum_i r_{ik}\\,x_i}{\\sum_i r_{ik}}"}
+              </MBlock>
+            </div>
+          </div>
+          <p className="text-muted">
+            Both steps strictly decrease <M>J</M> (or leave it unchanged), so
+            the algorithm <em>always converges</em> — typically in fewer than
+            20 iterations. Cost per iteration:{" "}
+            <M>{"O(N \\cdot K \\cdot d)"}</M>.
+          </p>
+        </div>
+      ),
+    },
+    {
+      id: "ch04-07b",
+      title: "k-means in action",
+      eyebrow: "Watch J fall",
       layout: "split",
       content: (
         <div className="space-y-4">
           <p>
-            Initialise <M>k</M> centroids, alternate assignment and update.
-            Centroids converge to local minima of the within-cluster sum of
-            squares:
+            <span className="font-mono text-[12px] text-accent">Step</span>{" "}
+            advances one half-iteration at a time, alternating between the
+            two phases. <span className="font-mono text-[12px] text-accent">Play</span>{" "}
+            runs to convergence. <span className="font-mono text-[12px]">J</span>{" "}
+            is the inertia; watch it monotonically decrease.
           </p>
-          <MBlock>{"\\sum_{k} \\sum_{x \\in C_k} \\|x - \\mu_k\\|^2"}</MBlock>
-          <p className="text-muted">
-            Sensitive to initialisation; we typically run several seeds and
-            keep the best. <strong>k-means++</strong> picks initial centroids
-            more carefully and almost always converges faster.
-          </p>
+          <ul className="space-y-2 text-[14px] text-ink/85">
+            <li>
+              · Thin lines in the assignment phase show each point pulled to
+              its nearest centroid (the <M>{"\\arg\\min"}</M>).
+            </li>
+            <li>
+              · In the update phase, the centroids translate to the cluster
+              mean — usually the largest <M>J</M> drop happens here.
+            </li>
+            <li>
+              · The animation stops automatically when no centroid moves.
+            </li>
+          </ul>
+          <Callout label="Gotchas" tone="warm">
+            <ul className="space-y-1">
+              <li>
+                · <strong>Initialisation matters.</strong> Plain k-means is
+                sensitive to the starting centroids;{" "}
+                <strong>k-means++</strong> seeds them apart on purpose and
+                almost always converges to a better minimum.
+              </li>
+              <li>
+                · <strong>You must pick K.</strong> Use the elbow method on{" "}
+                <M>J(K)</M> or the silhouette score.
+              </li>
+              <li>
+                · <strong>Assumes spherical, equal-size clusters.</strong>{" "}
+                For arbitrary shapes use DBSCAN or a Gaussian mixture model.
+              </li>
+            </ul>
+          </Callout>
         </div>
       ),
       viz: <KMeans />,
