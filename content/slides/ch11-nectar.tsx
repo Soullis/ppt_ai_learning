@@ -246,6 +246,16 @@ ObjectDetectionEvaluator(detector.model, cfg).evaluate()`}
               </tbody>
             </table>
           </div>
+          <Callout label="Worked example, published" tone="accent">
+            For a full, public end-to-end detection project that follows the
+            same pipeline (data → architecture comparison → training →
+            evaluation → deployment), see{" "}
+            <a className="underline" href="https://huggingface.co/blog/samuellimabraz/signature-detection-model" target="_blank" rel="noreferrer">
+              Open-Source Handwritten Signature Detection Model
+            </a>{" "}
+            — YOLO vs DETR vs RF-DETR with real numbers and an open model on
+            the Hub.
+          </Callout>
         </div>
       ),
     },

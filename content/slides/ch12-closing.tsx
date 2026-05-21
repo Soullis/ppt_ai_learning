@@ -36,6 +36,37 @@ export const ch12: Chapter = {
               <li>· COCO mAP definition (cocodataset.org)</li>
             </ul>
           </div>
+          <div className="md:col-span-2">
+            <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
+              Worked examples and side projects
+            </div>
+            <ul className="space-y-2 text-[15px]">
+              <li>
+                ·{" "}
+                <a className="underline" href="https://huggingface.co/blog/samuellimabraz/signature-detection-model" target="_blank" rel="noreferrer">
+                  Signature detection blog
+                </a>{" "}
+                — full detection pipeline, YOLO vs DETR vs RF-DETR, with
+                published model and dataset.
+              </li>
+              <li>
+                ·{" "}
+                <a className="underline" href="https://huggingface.co/blog/samuellimabraz/peft-methods" target="_blank" rel="noreferrer">
+                  PEFT methods
+                </a>{" "}
+                — LoRA, adapters, prefix-tuning: fine-tuning foundation models
+                cheaply.
+              </li>
+              <li>
+                ·{" "}
+                <a className="underline" href="https://github.com/samuellimabraz/cafedl" target="_blank" rel="noreferrer">
+                  cafedl
+                </a>{" "}
+                — Java deep-learning library written from scratch; an autograd
+                engine you can read end-to-end.
+              </li>
+            </ul>
+          </div>
         </div>
       ),
     },

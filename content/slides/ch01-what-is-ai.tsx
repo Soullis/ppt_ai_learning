@@ -394,6 +394,13 @@ export const ch01: Chapter = {
             detection head — which is why it converges fast on the small
             datasets we collect at competitions.
           </p>
+          <Callout label="Further reading" tone="accent">
+            <a className="underline" href="https://huggingface.co/blog/samuellimabraz/peft-methods" target="_blank" rel="noreferrer">
+              PEFT: Parameter-Efficient Fine-Tuning Methods
+            </a>
+            {" — "}LoRA, adapters, prefix-tuning and friends: how to fine-tune
+            a foundation model with &lt; 1 % of its parameters.
+          </Callout>
         </div>
       ),
       viz: <FoundationModels />,

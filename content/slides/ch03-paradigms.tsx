@@ -196,6 +196,56 @@ export const ch03: Chapter = {
       viz: <AgentEnvLoop />,
     },
     {
+      id: "ch03-llm",
+      title: "Modern LLMs use all three",
+      eyebrow: "Pretrain · fine-tune · align",
+      layout: "split",
+      content: (
+        <div className="space-y-4">
+          <p>
+            The training pipeline behind GPT-4, LLaMA, and Gemini composes the
+            paradigms we just saw, in this order:
+          </p>
+          <ol className="space-y-2 text-[14px] text-ink/85">
+            <li>
+              <strong>1. Self-supervised pretraining</strong> — predict the
+              next token on trillions of tokens of unlabelled text. Produces a
+              general-purpose base model.
+            </li>
+            <li>
+              <strong>2. Supervised fine-tuning (SFT)</strong> — train on a
+              much smaller set of high-quality instruction / answer pairs.
+              Teaches the format.
+            </li>
+            <li>
+              <strong>3. RLHF</strong> — reinforcement learning from human
+              feedback. A reward model learns from human preferences; the
+              policy is then optimised against it (PPO or DPO).
+            </li>
+          </ol>
+          <p className="text-muted">
+            Yann LeCun&apos;s 2016 &quot;cake&quot; analogy survives in this
+            form: most of the calories come from unsupervised pretraining;
+            SFT and RLHF are the icing and the cherry.
+          </p>
+        </div>
+      ),
+      viz: (
+        <figure className="mx-auto flex w-full max-w-[760px] flex-col items-center">
+          <div className="w-full overflow-hidden rounded-md border border-stroke bg-surface">
+            <img
+              src="/figures/llm-paradigms.jpg"
+              alt="Unsupervised pretraining, supervised fine-tuning, and RLHF, drawn as a monstrous creature with a cherry on top."
+              className="block w-full"
+            />
+          </div>
+          <figcaption className="mt-3 text-center font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
+            modern reimagining of LeCun&apos;s &quot;cake&quot; analogy
+          </figcaption>
+        </figure>
+      ),
+    },
+    {
       id: "ch03-05",
       title: "Where each fits in Black Bee",
       eyebrow: "Decision rules",

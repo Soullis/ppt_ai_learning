@@ -244,6 +244,15 @@ export const ch05: Chapter = {
             differentiate it automatically — autograd. We only have to write
             the forward pass.
           </p>
+          <Callout label="Implemented from scratch">
+            <a className="underline" href="https://github.com/samuellimabraz/cafedl" target="_blank" rel="noreferrer">
+              cafedl
+            </a>{" "}
+            — a small deep-learning library I wrote in Java to internalise
+            backprop, layer composition, and OOP design patterns. Useful if
+            you want to see every line of an autograd engine before reaching
+            for PyTorch.
+          </Callout>
         </div>
       ),
       viz: <BackpropChain />,
