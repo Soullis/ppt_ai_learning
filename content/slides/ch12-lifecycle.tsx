@@ -11,25 +11,26 @@ import { CodeBlock } from "@/components/ui/CodeBlock";
 import { Callout } from "@/components/ui/Callout";
 import { M, MBlock } from "@/components/math/Math";
 
-export const ch09: Chapter = {
-  id: "ch09",
-  number: 9,
+export const ch12: Chapter = {
+  id: "ch12",
+  number: 12,
+  part: 5,
   slug: "lifecycle",
   title: "Training and evaluation",
   subtitle: "From raw flights to a deployable model",
   slides: [
     {
-      id: "ch09-00",
+      id: "ch12-00",
       title: "The end-to-end pipeline",
-      eyebrow: "How a model is born",
+      eyebrow: "Pipeline",
       layout: "fullViz",
       viz: <LifecyclePipeline />,
     },
     {
-      id: "ch09-01",
+      id: "ch12-01",
       title: "Annotation",
       eyebrow: "Roboflow workflow",
-      layout: "prose",
+      layout: "scrollProse",
       content: (
         <div className="space-y-4">
           <p>
@@ -60,10 +61,10 @@ uploader.upload_dataset(
       ),
     },
     {
-      id: "ch09-02",
+      id: "ch12-02",
       title: "Format conversion",
       eyebrow: "COCO ↔ YOLO",
-      layout: "prose",
+      layout: "scrollProse",
       content: (
         <div className="space-y-5">
           <p>
@@ -88,9 +89,9 @@ yaml_path = FormatConverter("datasets/imav-gate", "datasets/imav-gate-yolo").con
       ),
     },
     {
-      id: "ch09-03",
+      id: "ch12-03",
       title: "Stratified splitting",
-      eyebrow: "Keep the distribution honest",
+      eyebrow: "Stratified splits",
       layout: "split",
       content: (
         <div className="space-y-4">
@@ -113,7 +114,7 @@ Stratifier(
       viz: <SplitBar />,
     },
     {
-      id: "ch09-04a",
+      id: "ch12-04a",
       title: "Why augment",
       eyebrow: "Three benefits at once",
       layout: "prose",
@@ -159,7 +160,7 @@ Stratifier(
       ),
     },
     {
-      id: "ch09-04",
+      id: "ch12-04",
       title: "The augmentation menu",
       eyebrow: "Pixel · geometric · composite",
       layout: "split",
@@ -202,7 +203,7 @@ Stratifier(
       viz: <AugmentationGallery />,
     },
     {
-      id: "ch09-05",
+      id: "ch12-05",
       title: "Class balancing",
       eyebrow: "Long tail · short tail",
       layout: "split",
@@ -230,7 +231,7 @@ Stratifier(
       viz: <ClassHist />,
     },
     {
-      id: "ch09-06",
+      id: "ch12-06",
       title: "Training",
       eyebrow: "End-to-end",
       layout: "split",
@@ -263,7 +264,7 @@ result = detector.train(TrainingConfig(
       viz: <TrainingCurves />,
     },
     {
-      id: "ch09-07",
+      id: "ch12-07",
       title: "Evaluation metrics",
       eyebrow: "What numbers mean",
       layout: "prose",
@@ -311,7 +312,7 @@ result = detector.train(TrainingConfig(
       ),
     },
     {
-      id: "ch09-08",
+      id: "ch12-08",
       title: "Precision–recall curves",
       eyebrow: "The shape behind the number",
       layout: "split",
@@ -330,7 +331,7 @@ result = detector.train(TrainingConfig(
       viz: <PRCurve />,
     },
     {
-      id: "ch09-09",
+      id: "ch12-09",
       title: "Confusion matrix",
       eyebrow: "Where the mistakes go",
       layout: "split",
@@ -366,14 +367,14 @@ result = detector.train(TrainingConfig(
       viz: <ConfusionMatrix />,
     },
     {
-      id: "ch09-10",
+      id: "ch12-10",
       title: "Common failure modes",
       eyebrow: "Loss curves",
       layout: "fullViz",
       viz: <FailureModes />,
     },
     {
-      id: "ch09-11",
+      id: "ch12-11",
       title: "Diagnosing in practice",
       eyebrow: "First questions to ask",
       layout: "prose",

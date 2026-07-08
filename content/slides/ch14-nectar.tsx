@@ -4,15 +4,16 @@ import { NectarMap } from "@/components/viz/NectarMap";
 import { CodeBlock } from "@/components/ui/CodeBlock";
 import { Callout } from "@/components/ui/Callout";
 
-export const ch11: Chapter = {
-  id: "ch11",
-  number: 11,
+export const ch14: Chapter = {
+  id: "ch14",
+  number: 14,
+  part: 5,
   slug: "nectar",
   title: "The Nectar AI module",
   subtitle: "Architecture and CLI",
   slides: [
     {
-      id: "ch11-00",
+      id: "ch14-00",
       title: "Module map",
       eyebrow: "nectar/nectar/ai/",
       layout: "split",
@@ -37,8 +38,8 @@ export const ch11: Chapter = {
       viz: <ModuleTree />,
     },
     {
-      id: "ch11-01",
-      title: "One factory, three frameworks",
+      id: "ch14-01",
+      title: "Detector facade",
       eyebrow: "Detector",
       layout: "split",
       content: (
@@ -63,10 +64,10 @@ result = detector.detect(image, conf=0.5)`}
       viz: <NectarMap />,
     },
     {
-      id: "ch11-03",
-      title: "Same API, three families",
-      eyebrow: "What the user sees",
-      layout: "prose",
+      id: "ch14-03",
+      title: "Unified API",
+      eyebrow: "Interfaces",
+      layout: "scrollProse",
       content: (
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           <div>
@@ -108,10 +109,10 @@ out = detector.detect(img)`}
       ),
     },
     {
-      id: "ch11-04",
+      id: "ch14-04",
       title: "CLI tour",
-      eyebrow: "nectar-ai detect …",
-      layout: "prose",
+      eyebrow: "CLI",
+      layout: "scrollProse",
       content: (
         <div className="space-y-4">
           <CodeBlock language="bash">
@@ -139,7 +140,7 @@ nectar-ai detect dataset upload --target huggingface \\
       ),
     },
     {
-      id: "ch11-05",
+      id: "ch14-05",
       title: "Slicing in practice",
       eyebrow: "SlicingConfig + merge strategies",
       layout: "split",
@@ -175,7 +176,7 @@ NMMStrategy        # non-maximum merging (clusters → one)`}
       ),
     },
     {
-      id: "ch11-06",
+      id: "ch14-06",
       title: "Evaluation artifacts",
       eyebrow: "Per run, on disk",
       layout: "prose",
@@ -209,7 +210,7 @@ ObjectDetectionEvaluator(detector.model, cfg).evaluate()`}
       ),
     },
     {
-      id: "ch11-07",
+      id: "ch14-07",
       title: "Black Bee case study",
       eyebrow: "IMAV 2025 — gate detection",
       layout: "prose",

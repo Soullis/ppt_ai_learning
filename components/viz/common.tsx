@@ -22,20 +22,25 @@ export function VizFrame({
   children,
   className,
   caption,
+  fit = "aspect",
 }: {
   width?: number;
   height?: number;
   children: ReactNode;
   className?: string;
   caption?: ReactNode;
+  fit?: "aspect" | "fill";
 }) {
   return (
-    <figure className={cn("flex w-full max-w-full flex-col items-center", className)}>
+    <figure className={cn("flex h-full w-full max-w-full flex-col items-center", className)}>
       <div
-        className="relative w-full overflow-hidden rounded-md border border-stroke bg-surface"
-        style={{ aspectRatio: `${width} / ${height}` }}
+        className={cn(
+          "relative w-full overflow-hidden rounded-md border border-stroke bg-surface",
+          fit === "fill" && "h-full min-h-[240px] max-h-full",
+        )}
+        style={fit === "aspect" ? { aspectRatio: `${width} / ${height}` } : undefined}
       >
-        <div className="absolute inset-0">{children}</div>
+        <div className={cn("absolute inset-0", fit === "fill" && "flex items-stretch")}>{children}</div>
       </div>
       {caption ? (
         <figcaption className="mt-3 text-center font-mono text-[11px] uppercase tracking-[0.12em] text-muted">

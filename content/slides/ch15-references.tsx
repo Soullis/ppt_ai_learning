@@ -1,13 +1,14 @@
 import type { Chapter } from "@/components/slide/types";
 
-export const ch12: Chapter = {
-  id: "ch12",
-  number: 12,
-  slug: "closing",
-  title: "Closing",
+export const ch15: Chapter = {
+  id: "ch15",
+  number: 15,
+  part: 5,
+  slug: "references",
+  title: "References",
   slides: [
     {
-      id: "ch12-00",
+      id: "ch15-00",
       title: "Where to dig next",
       eyebrow: "Reading and courses",
       layout: "prose",
@@ -34,6 +35,17 @@ export const ch12: Chapter = {
               <li>· Roboflow blog — RF-DETR series</li>
               <li>· Ultralytics docs — YOLO families</li>
               <li>· COCO mAP definition (cocodataset.org)</li>
+            </ul>
+          </div>
+          <div>
+            <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
+              Segmentation
+            </div>
+            <ul className="space-y-2 text-[15px]">
+              <li>· Ronneberger et al. (2015) — U-Net</li>
+              <li>· Long et al. (2014) — FCN</li>
+              <li>· He et al. (2017) — Mask R-CNN</li>
+              <li>· Cheng et al. (2022) — Mask2Former</li>
             </ul>
           </div>
           <div className="md:col-span-2">
@@ -71,7 +83,7 @@ export const ch12: Chapter = {
       ),
     },
     {
-      id: "ch12-01",
+      id: "ch15-01",
       title: "Questions",
       eyebrow: "Discussion",
       layout: "title",

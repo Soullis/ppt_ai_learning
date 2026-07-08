@@ -1,16 +1,21 @@
-import type { Chapter } from "@/components/slide/types";
+import type { Chapter, CoursePart } from "@/components/slide/types";
+import { PART_TITLES } from "@/components/slide/types";
 import { ch01 } from "./slides/ch01-what-is-ai";
 import { ch02 } from "./slides/ch02-data";
 import { ch03 } from "./slides/ch03-paradigms";
 import { ch04 } from "./slides/ch04-classical-ml";
 import { ch05 } from "./slides/ch05-deep-learning";
-import { ch06 } from "./slides/ch06-blocks";
-import { ch07 } from "./slides/ch07-cv-tasks";
-import { ch08 } from "./slides/ch08-detection";
-import { ch09 } from "./slides/ch09-lifecycle";
-import { ch10 } from "./slides/ch10-deployment";
-import { ch11 } from "./slides/ch11-nectar";
-import { ch12 } from "./slides/ch12-closing";
+import { ch06 } from "./slides/ch06-frameworks";
+import { ch07 } from "./slides/ch07-convolutional-networks";
+import { ch08 } from "./slides/ch08-cv-tasks";
+import { ch09 } from "./slides/ch09-classification";
+import { ch10 } from "./slides/ch10-detection";
+import { ch11 } from "./slides/ch11-segmentation";
+import { ch12 } from "./slides/ch12-lifecycle";
+import { ch13 } from "./slides/ch13-deployment";
+import { ch14 } from "./slides/ch14-nectar";
+import { ch15 } from "./slides/ch15-references";
+import { coreSlideCount } from "@/lib/slide-filter";
 
 export const chapters: Chapter[] = [
   ch01,
@@ -25,6 +30,9 @@ export const chapters: Chapter[] = [
   ch10,
   ch11,
   ch12,
+  ch13,
+  ch14,
+  ch15,
 ];
 
 export function getChapter(slug: string) {
@@ -36,5 +44,21 @@ export function getNeighbors(slug: string) {
   return {
     prev: i > 0 ? chapters[i - 1] : undefined,
     next: i < chapters.length - 1 ? chapters[i + 1] : undefined,
+  };
+}
+
+export function getParts(): CoursePart[] {
+  const partNumbers = [...new Set(chapters.map((c) => c.part))].sort((a, b) => a - b);
+  return partNumbers.map((n) => ({
+    number: n,
+    title: PART_TITLES[n] ?? `Part ${n}`,
+    chapters: chapters.filter((c) => c.part === n),
+  }));
+}
+
+export function chapterStats(chapter: Chapter) {
+  return {
+    total: chapter.slides.length,
+    core: coreSlideCount(chapter),
   };
 }

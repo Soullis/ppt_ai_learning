@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { chapters, getChapter, getNeighbors } from "@/content/chapters";
 import { SlideRunner } from "@/components/slide/SlideRunner";
@@ -6,14 +7,10 @@ export function generateStaticParams() {
   return chapters.map((c) => ({ slug: c.slug }));
 }
 
-export default function ChapterPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const chapter = getChapter(params.slug);
+function ChapterRunner({ slug }: { slug: string }) {
+  const chapter = getChapter(slug);
   if (!chapter) return notFound();
-  const { prev, next } = getNeighbors(params.slug);
+  const { prev, next } = getNeighbors(slug);
   return (
     <SlideRunner
       chapter={chapter}
@@ -21,5 +18,17 @@ export default function ChapterPage({
       prevSlug={prev?.slug}
       nextSlug={next?.slug}
     />
+  );
+}
+
+export default function ChapterPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  return (
+    <Suspense fallback={<div className="h-screen bg-bone" />}>
+      <ChapterRunner slug={params.slug} />
+    </Suspense>
   );
 }

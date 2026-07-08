@@ -66,22 +66,32 @@ ai-learning/
 └─ tailwind.config.ts
 ```
 
-## Chapters
+## Chapters (15, five parts)
 
-| #  | Slug             | Title                       |
-|----|------------------|-----------------------------|
-| 1  | `what-is-ai`     | What is AI                  |
-| 2  | `data`           | Data                        |
-| 3  | `paradigms`      | Learning paradigms          |
-| 4  | `classical-ml`   | Classical machine learning  |
-| 5  | `deep-learning`  | Deep learning foundations   |
-| 6  | `blocks`         | Architectural blocks        |
-| 7  | `cv-tasks`       | Computer vision tasks       |
-| 8  | `detection`      | Object detection            |
-| 9  | `lifecycle`      | Training and evaluation     |
-| 10 | `deployment`     | Deployment to the edge      |
-| 11 | `nectar`         | The Nectar AI module        |
-| 12 | `closing`        | Closing                     |
+| Part | #  | Slug                    | Title                       |
+|------|----|-------------------------|-----------------------------|
+| I    | 1  | `what-is-ai`            | What is AI                  |
+| I    | 2  | `data`                  | Data                        |
+| I    | 3  | `paradigms`             | Learning paradigms          |
+| II   | 4  | `classical-ml`          | Classical machine learning  |
+| II   | 5  | `deep-learning`         | Deep learning foundations   |
+| II   | 6  | `frameworks`            | Frameworks and ecosystem    |
+| II   | 7  | `convolutional-networks`| Convolutional networks      |
+| III  | 8  | `cv-tasks`              | Computer vision tasks       |
+| III  | 9  | `classification`        | Image classification        |
+| IV   | 10 | `detection`             | Object detection            |
+| IV   | 11 | `segmentation`          | Segmentation                |
+| V    | 12 | `lifecycle`             | Training and evaluation     |
+| V    | 13 | `deployment`            | Deployment to the edge      |
+| V    | 14 | `nectar`                | The Nectar AI module        |
+| V    | 15 | `references`            | References                  |
+
+## Lesson path
+
+- Cover offers **Lesson path** (`?path=lesson`) for core slides only.
+- **Full deck** includes reference and deep-dive slides for self-study.
+- See `content/STYLE.md` for copy conventions.
+
 
 ## Stack
 

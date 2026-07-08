@@ -6,15 +6,16 @@ import { CodeBlock } from "@/components/ui/CodeBlock";
 import { Callout } from "@/components/ui/Callout";
 import { M, MBlock } from "@/components/math/Math";
 
-export const ch10: Chapter = {
-  id: "ch10",
-  number: 10,
+export const ch13: Chapter = {
+  id: "ch13",
+  number: 13,
+  part: 5,
   slug: "deployment",
   title: "Deployment to the edge",
   subtitle: "From PyTorch checkpoint to onboard inference",
   slides: [
     {
-      id: "ch10-00",
+      id: "ch13-00",
       title: "Why edge",
       eyebrow: "Latency · privacy · power",
       layout: "prose",
@@ -41,7 +42,7 @@ export const ch10: Chapter = {
       ),
     },
     {
-      id: "ch10-01",
+      id: "ch13-01",
       title: "Export pipeline",
       eyebrow: "PyTorch → ONNX → TensorRT",
       layout: "fullViz",
@@ -58,7 +59,7 @@ export const ch10: Chapter = {
       ),
     },
     {
-      id: "ch10-02",
+      id: "ch13-02",
       title: "Quantisation",
       eyebrow: "Trade precision for speed",
       layout: "split",
@@ -79,14 +80,14 @@ export const ch10: Chapter = {
       viz: <QuantizationBar />,
     },
     {
-      id: "ch10-03",
+      id: "ch13-03",
       title: "Hardware",
-      eyebrow: "What the airframe carries",
+      eyebrow: "Onboard compute",
       layout: "fullViz",
       viz: <HardwareTable />,
     },
     {
-      id: "ch10-03b",
+      id: "ch13-03b",
       title: "Hardware sources",
       eyebrow: "Where the numbers come from",
       layout: "prose",
@@ -127,7 +128,7 @@ export const ch10: Chapter = {
               <a className="underline" href="https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/tesla-t4/t4-tensor-core-datasheet-951643.pdf" target="_blank" rel="noreferrer">
                 NVIDIA T4 datasheet
               </a>{" "}
-              — the common public-benchmark baseline used in the chapter 8
+              — the common public-benchmark baseline used in the chapter 10
               latency / mAP plot.
             </li>
           </ul>
@@ -140,10 +141,10 @@ export const ch10: Chapter = {
       ),
     },
     {
-      id: "ch10-04",
+      id: "ch13-04",
       title: "Latency budget",
-      eyebrow: "Allocate your milliseconds",
-      layout: "prose",
+      eyebrow: "Latency budget",
+      layout: "scrollProse",
       content: (
         <div className="space-y-5">
           <p>
@@ -180,7 +181,7 @@ export const ch10: Chapter = {
       ),
     },
     {
-      id: "ch10-05",
+      id: "ch13-05",
       title: "From model to drone",
       eyebrow: "End to end",
       layout: "prose",

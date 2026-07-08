@@ -12,261 +12,282 @@ import { Callout } from "@/components/ui/Callout";
 export const ch04: Chapter = {
   id: "ch04",
   number: 4,
+  part: 2,
   slug: "classical-ml",
   title: "Classical machine learning",
-  subtitle: "Linear models, trees, kernels, clusters",
+  subtitle: "Supervised algorithms before neural networks",
   slides: [
     {
       id: "ch04-00",
+      title: "From paradigms to algorithms",
+      eyebrow: "Bridge",
+      layout: "prose",
+      content: (
+        <p>
+          Chapter 3 introduced supervised learning. Here we study concrete algorithms with closed-form
+          or iterative solutions, the same building blocks that appear inside neural networks.
+        </p>
+      ),
+    },
+    {
+      id: "ch04-01",
       title: "Linear regression",
-      eyebrow: "Predict a continuous value",
-      layout: "split",
+      eyebrow: "Regression",
+      layout: "scrollSplit",
       content: (
         <div className="space-y-4">
+          <MBlock>{"\\hat y = w \\cdot x + b"}</MBlock>
           <p>
-            Predict a scalar from a feature: <M>{"\\hat y = w x + b"}</M>. Choose{" "}
-            <M>w, b</M> to minimise the mean squared error:
+            The model is a line with slope <M>w</M> and intercept <M>b</M>. With several features,{" "}
+            <M>w</M> is a vector holding one weight per feature and <M>b</M> is still a single
+            number.
           </p>
-          <MBlock>{"\\mathcal{L}(w, b) = \\frac{1}{N}\\sum_{i=1}^{N}(y_i - w x_i - b)^2"}</MBlock>
+          <MBlock>{"\\mathcal{L}_{\\mathrm{MSE}} = \\frac{1}{N}\\sum_i (y_i - \\hat y_i)^2"}</MBlock>
           <p>
-            Closed form: <M>{"\\hat w = (X^\\top X)^{-1} X^\\top y"}</M>. Drag the
-            sliders; the yellow rays are residuals — their squared lengths sum to
-            the MSE.
+            The loss is the mean squared error, the average squared distance between predictions and
+            true values. Training means finding the <M>w</M> and <M>b</M> that make it as small as
+            possible. This is exactly what the sliders below the plot are doing by hand.
           </p>
-          <Callout tone="accent">
-            Linear regression already has every piece of a neural network in
-            miniature — parameters, a loss, an optimiser.
+          <p>
+            <M>{"\\hat w = (X^\\top X)^{-1} X^\\top y"}</M> is the closed form solution. It comes from
+            setting the derivative of the MSE to zero and solving directly, so it gives the exact best{" "}
+            <M>w</M> in one step, no iteration needed. It is only practical when the number of
+            features is small enough for <M>{"X^\\top X"}</M> to be inverted, inverting an F by F
+            matrix costs roughly <M>{"F^3"}</M> operations, and it only exists because the model is
+            linear in its parameters. That is why gradient descent takes over once we reach logistic
+            regression and neural networks.
+          </p>
+          <Callout label="Worked example">
+            <a className="underline" href="https://www.kaggle.com/code/samuellimabraz/sgd-linear-regression" target="_blank" rel="noreferrer">
+              Kaggle: SGD linear regression step by step
+            </a>
           </Callout>
         </div>
       ),
       viz: <ScatterFit />,
     },
     {
-      id: "ch04-01",
+      id: "ch04-02",
       title: "Logistic regression",
-      eyebrow: "From regression to classification",
-      layout: "split",
+      eyebrow: "Classification",
+      layout: "scrollSplit",
       content: (
         <div className="space-y-4">
-          <p>Squash a linear score into a probability with the sigmoid:</p>
-          <MBlock>
-            {"\\sigma(z) = \\frac{1}{1 + e^{-z}}, \\qquad p(y = 1 \\mid x) = \\sigma(w^\\top x + b)"}
-          </MBlock>
           <p>
-            Trained with binary cross-entropy, the decision boundary is the
-            hyperplane <M>{"w^\\top x + b = 0"}</M>.
+            The score is the same linear combination as before, <M>{"z = w \\cdot x + b"}</M>, but it
+            is passed through the sigmoid function before being read as a prediction.
           </p>
-          <Callout label="A perceptron in disguise">
-            One logistic-regression unit is a single artificial neuron. Stack
-            them and you get an MLP — chapter 5.
-          </Callout>
+          <MBlock>{"\\sigma(z) = \\frac{1}{1 + e^{-z}}"}</MBlock>
+          <p>
+            Sigmoid squashes any real number into a value between 0 and 1, tracing an S shaped curve.
+          </p>
+          <MBlock>{"p(y=1|x) = \\sigma(w \\cdot x + b)"}</MBlock>
+          <p>
+            This is read as the estimated probability that the input belongs to class 1. The decision
+            rule predicts class 1 when <M>{"p > 0.5"}</M>, which is the same as <M>{"z > 0"}</M>. That
+            is why the boundary on the right is a straight line: the same shape as the fitted line in
+            linear regression, now separating two classes instead of fitting a curve.
+          </p>
+          <p>
+            Training minimises binary cross entropy, which penalises confident wrong predictions much
+            more heavily than uncertain ones. One logistic regression unit is a single neuron, chapter
+            5 stacks many of them with a non-linearity in between.
+          </p>
         </div>
       ),
       viz: <DecisionBoundary mode="linear" />,
     },
     {
-      id: "ch04-02",
-      title: "Bias and variance",
-      eyebrow: "The fundamental tradeoff",
-      layout: "fullViz",
+      id: "ch04-03",
+      title: "Bias, variance, and overfitting",
+      eyebrow: "Generalisation",
+      layout: "wideViz",
+      content: (
+        <div className="space-y-4">
+          <MBlock>
+            {"\\mathbb{E}[(y - \\hat f)^2] = \\mathrm{Bias}^2 + \\mathrm{Var} + \\sigma^2"}
+          </MBlock>
+          <p>
+            The expected error of a model splits into three parts: how wrong it is on average
+            (bias), how much its predictions change with a different training set (variance), and
+            noise in the data itself that no model can remove.
+          </p>
+          <ul className="space-y-2 text-[14px]">
+            <li>
+              The left panel underfits: the line is too simple to follow the pattern, high bias.
+            </li>
+            <li>
+              The middle panel fits the underlying pattern without chasing individual noisy points.
+            </li>
+            <li>
+              The right panel overfits: it bends to pass through every point including the noise,
+              high variance.
+            </li>
+          </ul>
+        </div>
+      ),
       viz: <BiasVariance />,
     },
     {
-      id: "ch04-03",
-      title: "Bias / variance, in words",
-      eyebrow: "What the three plots mean",
-      layout: "prose",
-      content: (
-        <div className="space-y-4">
-          <p>
-            Generalisation error decomposes into three pieces:
-          </p>
-          <MBlock>
-            {"\\mathbb{E}\\big[(y - \\hat f(x))^2\\big] \\;=\\; \\underbrace{\\mathrm{Bias}^2}_{\\text{model too rigid}} + \\underbrace{\\mathrm{Var}}_{\\text{model too wiggly}} + \\underbrace{\\sigma^2}_{\\text{label noise}}"}
-          </MBlock>
-          <ul className="space-y-2 text-[15px]">
-            <li><strong>Underfit</strong> · high bias — the model cannot capture the structure (a line for a sine wave).</li>
-            <li><strong>Good fit</strong> · balanced — captures the structure, ignores the noise.</li>
-            <li><strong>Overfit</strong> · high variance — fits noise as if it were signal.</li>
-          </ul>
-          <p className="text-muted">
-            More data shifts the variance down. Regularisation shifts the bias
-            up — sometimes that's the right trade.
-          </p>
-        </div>
-      ),
-    },
-    {
       id: "ch04-04",
-      title: "Decision trees",
-      eyebrow: "Recursive splits",
-      layout: "split",
+      title: "Decision trees and ensembles",
+      eyebrow: "Trees",
+      layout: "scrollSplit",
       content: (
         <div className="space-y-4">
           <p>
-            At each node, pick the feature and threshold that split the data
-            into the purest children. Purity is measured by entropy or Gini:
+            A tree recursively splits the feature space with threshold rules, is a feature greater
+            than a value, until each resulting region contains mostly one class.
           </p>
-          <MBlock>{"H(p) = -\\sum_k p_k \\log p_k, \\qquad G(p) = 1 - \\sum_k p_k^2"}</MBlock>
+          <MBlock>{"H(p) = -\\sum_k p_k \\log p_k"}</MBlock>
           <p>
-            One tree overfits; many randomised trees averaged together
-            (<strong>random forest</strong>, <strong>gradient boosting</strong>:
-            XGBoost, LightGBM, CatBoost) define a class of models that still
-            wins on tabular data today.
+            At each step the tree picks the split that reduces impurity the most. Entropy measures
+            how mixed the classes are in a region, it is zero when the region is pure. Gini impurity
+            is a cheaper alternative with similar behaviour.
           </p>
+          <p>
+            A single tree overfits easily since it can keep growing until it memorises the training
+            data. Two standard fixes combine many trees:
+          </p>
+          <ul className="space-y-2 text-[14px]">
+            <li>
+              Random forest trains many trees on random subsets of data and features, then averages
+              their votes. This reduces variance.
+            </li>
+            <li>
+              Gradient boosting (XGBoost, LightGBM) trains trees sequentially, each one correcting the
+              errors of the previous ones. This reduces bias.
+            </li>
+          </ul>
+          <p className="text-muted">Trees and their ensembles remain the strongest default on tabular data, structured columns rather than images or text.</p>
+          <Callout label="Further reading">
+            <a className="underline" href="https://scikit-learn.org/stable/modules/tree.html" target="_blank" rel="noreferrer">
+              scikit-learn: decision trees
+            </a>
+            {" · "}
+            <a className="underline" href="https://scikit-learn.org/stable/modules/ensemble.html" target="_blank" rel="noreferrer">
+              scikit-learn: ensembles
+            </a>
+          </Callout>
         </div>
       ),
       viz: <TreeSplits />,
     },
     {
       id: "ch04-05",
-      title: "k-Nearest Neighbours",
-      eyebrow: "No training, just memory",
-      layout: "split",
+      title: "k-nearest neighbours",
+      eyebrow: "Instance-based",
+      layout: "scrollSplit",
       content: (
         <div className="space-y-4">
+          <MBlock>{"\\hat y(x) = \\mathrm{mode}\\big(\\{y_j : x_j \\in \\mathcal{N}_k(x)\\}\\big)"}</MBlock>
           <p>
-            For a query point, look up the <M>k</M> closest training points and
-            vote on the label.
+            There is no training step. All the work happens at prediction time by looking directly at
+            the stored data, which is why it is called a lazy learner.
           </p>
-          <MBlock>{"\\hat y(x) = \\mathrm{mode}\\Big(\\{ y_j : x_j \\in \\mathcal{N}_k(x) \\}\\Big)"}</MBlock>
-          <ul className="space-y-2 text-[14px] text-ink/85">
-            <li>· No model fitted — every prediction is a search.</li>
-            <li>· Choice of <M>k</M> trades bias for variance.</li>
-            <li>· Distance metric matters; standardise features first.</li>
+          <p>
+            To predict a new point, measure the distance to every training point (commonly
+            Euclidean), take the <M>k</M> closest, and vote. Classification takes the majority class
+            among the <M>k</M> neighbours, regression averages their values.
+          </p>
+          <ul className="space-y-2 text-[14px]">
+            <li>
+              A small <M>k</M> follows the data closely and produces a noisy boundary: low bias, high
+              variance. A large <M>k</M> smooths the boundary: higher bias, lower variance.
+            </li>
+            <li>
+              Distance is dominated by whichever feature has the largest numeric range, so features
+              are normally standardised first.
+            </li>
+            <li>
+              In high dimensions, distances between points stop being meaningful, every point ends up
+              roughly equally far from every other. This is the curse of dimensionality, and it is why
+              kNN degrades as the number of features grows.
+            </li>
           </ul>
-          <p className="text-muted">
-            Simple and useful as a baseline, but inference cost grows linearly
-            with the dataset and quality degrades with the dimension.
-          </p>
+          <Callout label="Further reading">
+            <a className="underline" href="https://scikit-learn.org/stable/modules/neighbors.html" target="_blank" rel="noreferrer">
+              scikit-learn: nearest neighbors
+            </a>
+          </Callout>
         </div>
       ),
       viz: <KnnQuery />,
     },
     {
       id: "ch04-06",
-      title: "Support Vector Machines",
-      eyebrow: "Maximise the margin",
-      layout: "split",
+      title: "Support vector machines",
+      eyebrow: "Margin and kernels",
+      layout: "scrollSplit",
       content: (
         <div className="space-y-4">
           <p>
-            Find the hyperplane that <em>maximises</em> the gap between the two
-            classes. Only the points sitting on the gap — the{" "}
-            <strong>support vectors</strong> — define the solution:
+            Among all the lines that separate the two classes, SVM picks the one that maximises the
+            margin, the distance to the closest point of each class. A wider margin tends to
+            generalise better to new data.
           </p>
-          <MBlock>{"\\min_{w, b} \\tfrac{1}{2}\\|w\\|^2 \\quad \\text{s.t. } y_i(w^\\top x_i + b) \\geq 1"}</MBlock>
+          <MBlock>{"\\min_{w,b} \\tfrac{1}{2}\\|w\\|^2 \\quad \\text{s.t. } y_i(w^\\top x_i + b) \\geq 1"}</MBlock>
           <p>
-            For non-linearly separable data, the kernel trick maps points to a
-            higher-dimensional space where they are separable, without ever
-            computing that mapping explicitly.
+            The decision function has the same linear form as before, classify by the sign of{" "}
+            <M>{"w \\cdot x + b"}</M>. In practice a soft margin version allows some points to violate
+            the margin, controlled by a hyperparameter <M>C</M> that trades margin width against the
+            number of misclassified points.
           </p>
+          <p>
+            Support vectors are the points that sit exactly on the margin. They are the only points
+            that determine the solution, every other point could be removed without changing the
+            boundary. On the plot, the axes are the two features, the solid line is the decision
+            boundary, the dashed lines mark the margin, and the circled points are the support
+            vectors.
+          </p>
+          <p>
+            The kernel trick replaces the dot product with a kernel function (RBF, polynomial) to
+            separate classes that are not linearly separable in the original features, without ever
+            computing that higher dimensional mapping explicitly.
+          </p>
+          <Callout label="Further reading">
+            <a className="underline" href="https://scikit-learn.org/stable/modules/svm.html" target="_blank" rel="noreferrer">
+              scikit-learn: support vector machines
+            </a>
+          </Callout>
         </div>
       ),
       viz: <SVMMargin />,
     },
     {
       id: "ch04-07",
-      title: "k-means — the algorithm",
-      eyebrow: "Unsupervised baseline",
-      layout: "prose",
+      title: "k-means",
+      eyebrow: "Clustering",
+      layout: "scrollSplit",
       content: (
         <div className="space-y-4">
+          <MBlock>{"J = \\sum_{i,k} r_{ik}\\|x_i - \\mu_k\\|^2"}</MBlock>
           <p>
-            Given <M>N</M> points <M>{"\\{x_i\\} \\subset \\mathbb{R}^d"}</M>{" "}
-            and a chosen number of clusters <M>K</M>, find an assignment{" "}
-            <M>{"r_{ik} \\in \\{0, 1\\}"}</M> and centroids{" "}
-            <M>{"\\mu_k \\in \\mathbb{R}^d"}</M> that minimise the{" "}
-            <em>within-cluster sum of squares</em> (also called inertia):
+            The goal is to partition <M>N</M> points into <M>K</M> clusters, minimising the total
+            squared distance from each point to its cluster centroid.
           </p>
-          <MBlock>
-            {"J = \\sum_{i=1}^{N}\\sum_{k=1}^{K} r_{ik}\\,\\|x_i - \\mu_k\\|^2"}
-          </MBlock>
+          <p>Lloyd&apos;s algorithm solves this approximately:</p>
+          <ol className="list-decimal space-y-1 pl-5 text-[14px]">
+            <li>pick <M>K</M> initial centroids</li>
+            <li>assign every point to its nearest centroid</li>
+            <li>move each centroid to the mean of its assigned points</li>
+            <li>repeat steps 2 and 3 until assignments stop changing</li>
+          </ol>
           <p>
-            Joint minimisation over <M>r</M> and{" "}
-            <M>{"\\mu"}</M> is NP-hard. Lloyd&apos;s algorithm (1957) is the
-            workhorse heuristic — alternate two closed-form steps until
-            nothing changes:
+            This is exactly what the animation on the right steps through, use Step to see one phase
+            at a time or Play to run it automatically.
           </p>
-          <div className="space-y-3 rounded-md border border-stroke bg-surface px-5 py-4 text-[14px]">
-            <div>
-              <div className="mb-1 font-mono text-[11px] uppercase tracking-[0.12em] text-accent">
-                step 1 · assignment
-              </div>
-              <p className="mb-2">
-                Fix the centroids. Send each point to the closest one.
-              </p>
-              <MBlock>
-                {"r_{ik} = \\begin{cases} 1 & k = \\arg\\min_j \\|x_i - \\mu_j\\|^2 \\\\ 0 & \\text{otherwise} \\end{cases}"}
-              </MBlock>
-            </div>
-            <div>
-              <div className="mb-1 font-mono text-[11px] uppercase tracking-[0.12em] text-honey">
-                step 2 · update
-              </div>
-              <p className="mb-2">
-                Fix the assignment. Move each centroid to the mean of its
-                points (this is the value that minimises <M>J</M> for fixed{" "}
-                <M>r</M>):
-              </p>
-              <MBlock>
-                {"\\mu_k = \\frac{\\sum_i r_{ik}\\,x_i}{\\sum_i r_{ik}}"}
-              </MBlock>
-            </div>
-          </div>
-          <p className="text-muted">
-            Both steps strictly decrease <M>J</M> (or leave it unchanged), so
-            the algorithm <em>always converges</em> — typically in fewer than
-            20 iterations. Cost per iteration:{" "}
-            <M>{"O(N \\cdot K \\cdot d)"}</M>.
-          </p>
-        </div>
-      ),
-    },
-    {
-      id: "ch04-07b",
-      title: "k-means in action",
-      eyebrow: "Watch J fall",
-      layout: "split",
-      content: (
-        <div className="space-y-4">
           <p>
-            <span className="font-mono text-[12px] text-accent">Step</span>{" "}
-            advances one half-iteration at a time, alternating between the
-            two phases. <span className="font-mono text-[12px] text-accent">Play</span>{" "}
-            runs to convergence. <span className="font-mono text-[12px]">J</span>{" "}
-            is the inertia; watch it monotonically decrease.
+            k-means only finds a local minimum. A different random initialisation can converge to a
+            different result, which is why it is common to run it several times and keep the lowest{" "}
+            <M>J</M>, or use a smarter initialisation such as k-means++. Choosing <M>K</M> is not
+            automatic either: the elbow method plots <M>J</M> against <M>K</M> and looks for where
+            adding clusters stops helping much, the silhouette score is another common heuristic.
           </p>
-          <ul className="space-y-2 text-[14px] text-ink/85">
-            <li>
-              · Thin lines in the assignment phase show each point pulled to
-              its nearest centroid (the <M>{"\\arg\\min"}</M>).
-            </li>
-            <li>
-              · In the update phase, the centroids translate to the cluster
-              mean — usually the largest <M>J</M> drop happens here.
-            </li>
-            <li>
-              · The animation stops automatically when no centroid moves.
-            </li>
-          </ul>
-          <Callout label="Gotchas" tone="warm">
-            <ul className="space-y-1">
-              <li>
-                · <strong>Initialisation matters.</strong> Plain k-means is
-                sensitive to the starting centroids;{" "}
-                <strong>k-means++</strong> seeds them apart on purpose and
-                almost always converges to a better minimum.
-              </li>
-              <li>
-                · <strong>You must pick K.</strong> Use the elbow method on{" "}
-                <M>J(K)</M> or the silhouette score.
-              </li>
-              <li>
-                · <strong>Assumes spherical, equal-size clusters.</strong>{" "}
-                For arbitrary shapes use DBSCAN or a Gaussian mixture model.
-              </li>
-            </ul>
+          <Callout label="Further reading">
+            <a className="underline" href="https://scikit-learn.org/stable/modules/clustering.html#k-means" target="_blank" rel="noreferrer">
+              scikit-learn: k-means clustering
+            </a>
           </Callout>
         </div>
       ),
@@ -275,8 +296,8 @@ export const ch04: Chapter = {
     {
       id: "ch04-08",
       title: "When to use which",
-      eyebrow: "Cheat sheet",
-      layout: "prose",
+      eyebrow: "Summary table",
+      layout: "scrollProse",
       content: (
         <div className="overflow-hidden rounded-md border border-stroke">
           <table className="w-full border-collapse text-sm">
@@ -284,29 +305,44 @@ export const ch04: Chapter = {
               <tr className="bg-bone text-left font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
                 <th className="border-b border-stroke px-4 py-3">Algorithm</th>
                 <th className="border-b border-stroke px-4 py-3">Best for</th>
-                <th className="border-b border-stroke px-4 py-3">Watch out</th>
               </tr>
             </thead>
-            <tbody className="text-ink">
+            <tbody>
               {[
-                ["Linear / Ridge / Lasso", "small N, linear signal, interpretability", "fails on non-linear structure"],
-                ["Logistic regression", "binary classification baseline", "linear boundary only"],
-                ["Decision tree (single)", "interpretable rules", "overfits — prefer ensembles"],
-                ["Random forest / boosting", "tabular data, mixed types", "large model, slower inference"],
-                ["k-NN", "low-dim, slow inference acceptable", "scales poorly, distance-sensitive"],
-                ["SVM", "small / medium N, clear margin", "kernel choice, slow on large N"],
-                ["k-means", "rough clusters, vector quantisation", "needs k, non-spherical clusters fail"],
+                ["Linear / Ridge", "small N, interpretability, linear signal"],
+                ["Logistic regression", "binary baseline, one neuron"],
+                ["Tree ensembles", "tabular, mixed types"],
+                ["k-NN", "low-dim baseline"],
+                ["SVM", "small/medium N, clear margin"],
+                ["k-means", "clustering, vector quantisation"],
               ].map((row) => (
-                <tr key={row[0]} className="border-b border-stroke last:border-b-0">
-                  {row.map((cell) => (
-                    <td key={cell} className="px-4 py-3 align-top">
-                      {cell}
-                    </td>
-                  ))}
+                <tr key={row[0]} className="border-b border-stroke">
+                  <td className="px-4 py-3">{row[0]}</td>
+                  <td className="px-4 py-3 text-muted">{row[1]}</td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+      ),
+    },
+    {
+      id: "ch04-09",
+      title: "Chapter summary",
+      eyebrow: "Summary",
+      layout: "prose",
+      content: (
+        <div className="space-y-3 text-[15px]">
+          <p>Linear/logistic regression, trees, kNN, SVM, k-means: all of them optimise a loss on data.</p>
+          <p>
+            For from-scratch implementations,{" "}
+            <a className="underline" href="https://github.com/samuellimabraz/cafedl" target="_blank" rel="noreferrer">
+              cafedl
+            </a>{" "}
+            is a Java library with <code className="font-mono text-[13px]">LinearRegression.java</code> (MSE, gradient descent) and{" "}
+            <code className="font-mono text-[13px]">NonLinearFunctions.java</code> (sine, saddle, Rosenbrock surfaces).
+          </p>
+          <p className="text-muted">Next: chapter 5, stack neurons, add non-linearity, train with backprop.</p>
         </div>
       ),
     },
