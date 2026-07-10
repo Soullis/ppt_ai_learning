@@ -373,7 +373,7 @@ export const ch02: Chapter = {
               <strong>Preprocess</strong> — letterbox to model size, normalise pixels
             </li>
             <li>
-              <strong>Augment</strong> — flips, hue shifts, mosaic (chapter 12)
+              <strong>Augment</strong> — flips, hue shifts, mosaic (chapter 13)
             </li>
             <li>
               <strong>Export</strong> — YOLO or COCO format for training

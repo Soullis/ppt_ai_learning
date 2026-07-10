@@ -4,42 +4,50 @@ import { motion } from "framer-motion";
 import { COLORS, VizFrame } from "./common";
 
 /**
- * Side-by-side comparison: a fully-connected layer between an image and a
- * single output neuron versus a small convolution sliding the same kernel
- * across all locations. The point is to make the parameter count and the
- * weight-sharing visible.
+ * Side-by-side: dense layer vs convolution on the same 6×6 patch.
+ * Weight sharing and parameter count are the teaching goal.
  */
 export function ConvIntuition({
-  width = 980,
-  height = 380,
+  width = 640,
+  height = 520,
 }: {
   width?: number;
   height?: number;
 }) {
-  const N = 6; // image side
-  const cellPx = 18;
-  const padX = 30;
-  const panelW = (width - padX * 3) / 2;
-  const panelH = height - 30;
+  const N = 6;
+  const cellPx = 26;
+  const padX = 16;
+  const padY = 12;
+  const gap = 16;
+  const panelW = (width - padX * 2 - gap) / 2;
+  const gridSize = N * cellPx;
+  const gridX = (panelW - gridSize) / 2;
+  const gridY = 44;
 
   return (
-    <VizFrame width={width} height={height} caption="dense vs convolution — the same operation, different parameter budget">
+    <VizFrame
+      width={width}
+      height={height}
+      fit="fill"
+      caption="dense layer: one weight per input pixel · convolution: one kernel reused at every position"
+    >
       <svg viewBox={`0 0 ${width} ${height}`} className="h-full w-full">
-        {/* Left — dense */}
-        <g transform={`translate(${padX}, 20)`}>
-          <rect width={panelW} height={panelH} fill={COLORS.surface} stroke={COLORS.stroke} />
+        {/* Dense panel */}
+        <g transform={`translate(${padX}, ${padY})`}>
+          <rect width={panelW} height={height - padY * 2} rx={6} fill={COLORS.surface} stroke={COLORS.stroke} />
           <text
-            x={14}
-            y={20}
-            fontSize={11}
+            x={panelW / 2}
+            y={22}
+            textAnchor="middle"
+            fontSize={12}
             fontFamily="JetBrains Mono, monospace"
             fill={COLORS.muted}
-            style={{ textTransform: "uppercase", letterSpacing: "0.14em" }}
+            style={{ textTransform: "uppercase", letterSpacing: "0.12em" }}
           >
             dense layer
           </text>
-          {/* Image grid */}
-          <g transform="translate(28, 60)">
+
+          <g transform={`translate(${gridX}, ${gridY})`}>
             {Array.from({ length: N * N }, (_, k) => {
               const r = Math.floor(k / N);
               const c = k % N;
@@ -48,63 +56,83 @@ export function ConvIntuition({
                   key={k}
                   x={c * cellPx}
                   y={r * cellPx}
-                  width={cellPx - 1}
-                  height={cellPx - 1}
+                  width={cellPx - 2}
+                  height={cellPx - 2}
+                  rx={2}
                   fill={COLORS.ink}
-                  fillOpacity={0.05 + (((c + r) % 4) / 4) * 0.5}
+                  fillOpacity={0.06 + (((c + r) % 4) / 4) * 0.45}
+                  stroke={COLORS.stroke}
                 />
               );
             })}
           </g>
-          {/* Output neuron */}
-          <circle cx={panelW - 50} cy={120} r={18} fill={COLORS.honey} fillOpacity={0.18} stroke={COLORS.honey} strokeWidth={1.5} />
-          <text x={panelW - 50} y={125} textAnchor="middle" fontSize={13} fontFamily="JetBrains Mono, monospace" fill={COLORS.ink}>
+
+          <circle
+            cx={panelW - 36}
+            cy={gridY + gridSize / 2}
+            r={22}
+            fill={COLORS.honey}
+            fillOpacity={0.2}
+            stroke={COLORS.honey}
+            strokeWidth={1.5}
+          />
+          <text
+            x={panelW - 36}
+            y={gridY + gridSize / 2 + 5}
+            textAnchor="middle"
+            fontSize={15}
+            fontFamily="JetBrains Mono, monospace"
+            fill={COLORS.ink}
+          >
             y
           </text>
-          {/* Lines from each pixel */}
+
           {Array.from({ length: N * N }, (_, k) => {
             const r = Math.floor(k / N);
             const c = k % N;
-            const x1 = 28 + c * cellPx + cellPx / 2;
-            const y1 = 60 + r * cellPx + cellPx / 2;
+            const x1 = gridX + c * cellPx + cellPx / 2;
+            const y1 = gridY + r * cellPx + cellPx / 2;
             return (
               <line
                 key={k}
                 x1={x1}
                 y1={y1}
-                x2={panelW - 60}
-                y2={120}
+                x2={panelW - 58}
+                y2={gridY + gridSize / 2}
                 stroke={COLORS.accent}
-                strokeOpacity={0.15}
+                strokeOpacity={0.22}
+                strokeWidth={1}
               />
             );
           })}
-          <text x={14} y={panelH - 56} fontSize={12} fill={COLORS.ink} fontFamily="JetBrains Mono, monospace">
-            params per output = H · W · C = {N * N}
+
+          <text x={16} y={height - padY * 2 - 72} fontSize={13} fill={COLORS.ink} fontFamily="JetBrains Mono, monospace">
+            params = H · W · C
           </text>
-          <text x={14} y={panelH - 36} fontSize={11} fill={COLORS.muted}>
-            no spatial bias — must learn translation from scratch
+          <text x={16} y={height - padY * 2 - 52} fontSize={13} fill={COLORS.ink} fontFamily="JetBrains Mono, monospace">
+            = {N} · {N} · 1 = {N * N}
           </text>
-          <text x={14} y={panelH - 18} fontSize={11} fill={COLORS.muted}>
-            for an HD image: millions of params per neuron
+          <text x={16} y={height - padY * 2 - 28} fontSize={12} fill={COLORS.muted}>
+            every pixel has its own weight
           </text>
         </g>
 
-        {/* Right — convolution */}
-        <g transform={`translate(${padX * 2 + panelW}, 20)`}>
-          <rect width={panelW} height={panelH} fill={COLORS.surface} stroke={COLORS.stroke} />
+        {/* Convolution panel */}
+        <g transform={`translate(${padX + panelW + gap}, ${padY})`}>
+          <rect width={panelW} height={height - padY * 2} rx={6} fill={COLORS.surface} stroke={COLORS.stroke} />
           <text
-            x={14}
-            y={20}
-            fontSize={11}
+            x={panelW / 2}
+            y={22}
+            textAnchor="middle"
+            fontSize={12}
             fontFamily="JetBrains Mono, monospace"
             fill={COLORS.muted}
-            style={{ textTransform: "uppercase", letterSpacing: "0.14em" }}
+            style={{ textTransform: "uppercase", letterSpacing: "0.12em" }}
           >
             convolution
           </text>
-          {/* Image grid with one 3x3 kernel highlighted at three positions */}
-          <g transform="translate(28, 60)">
+
+          <g transform={`translate(${gridX}, ${gridY})`}>
             {Array.from({ length: N * N }, (_, k) => {
               const r = Math.floor(k / N);
               const c = k % N;
@@ -113,14 +141,15 @@ export function ConvIntuition({
                   key={k}
                   x={c * cellPx}
                   y={r * cellPx}
-                  width={cellPx - 1}
-                  height={cellPx - 1}
+                  width={cellPx - 2}
+                  height={cellPx - 2}
+                  rx={2}
                   fill={COLORS.ink}
-                  fillOpacity={0.05 + (((c + r) % 4) / 4) * 0.5}
+                  fillOpacity={0.06 + (((c + r) % 4) / 4) * 0.45}
+                  stroke={COLORS.stroke}
                 />
               );
             })}
-            {/* kernel highlights */}
             {[
               [0, 0],
               [1, 2],
@@ -130,53 +159,49 @@ export function ConvIntuition({
                 key={i}
                 x={c * cellPx}
                 y={r * cellPx}
-                width={cellPx * 3}
-                height={cellPx * 3}
+                width={cellPx * 3 - 2}
+                height={cellPx * 3 - 2}
+                rx={3}
                 fill={COLORS.honey}
-                fillOpacity={0.18}
+                fillOpacity={0.22}
                 stroke={COLORS.honey}
-                strokeWidth={1.4}
+                strokeWidth={2}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.2 + i * 0.2 }}
+                transition={{ duration: 0.35, delay: 0.15 + i * 0.15 }}
               />
             ))}
           </g>
-          {/* Kernel label */}
-          <g transform={`translate(${panelW - 110}, 90)`}>
+
+          <g transform={`translate(${panelW - 78}, ${gridY + 8})`}>
             <text x={0} y={0} fontSize={11} fontFamily="JetBrains Mono, monospace" fill={COLORS.muted}>
               same 3×3 kernel
             </text>
-            <text x={0} y={16} fontSize={11} fontFamily="JetBrains Mono, monospace" fill={COLORS.muted}>
-              applied everywhere
-            </text>
-            <g transform="translate(0, 26)">
-              {[0, 1, 2].map((r) => (
-                <g key={r}>
-                  {[0, 1, 2].map((c) => (
-                    <rect
-                      key={c}
-                      x={c * 14}
-                      y={r * 14}
-                      width={12}
-                      height={12}
-                      fill={COLORS.honey}
-                      fillOpacity={0.4}
-                      stroke={COLORS.honey}
-                    />
-                  ))}
-                </g>
-              ))}
-            </g>
+            {[0, 1, 2].map((r) =>
+              [0, 1, 2].map((c) => (
+                <rect
+                  key={`${r}-${c}`}
+                  x={c * 18}
+                  y={14 + r * 18}
+                  width={16}
+                  height={16}
+                  rx={2}
+                  fill={COLORS.honey}
+                  fillOpacity={0.45}
+                  stroke={COLORS.honey}
+                />
+              )),
+            )}
           </g>
-          <text x={14} y={panelH - 56} fontSize={12} fill={COLORS.ink} fontFamily="JetBrains Mono, monospace">
-            params per filter = K · K · C = 9
+
+          <text x={16} y={height - padY * 2 - 72} fontSize={13} fill={COLORS.ink} fontFamily="JetBrains Mono, monospace">
+            params = K · K · C
           </text>
-          <text x={14} y={panelH - 36} fontSize={11} fill={COLORS.muted}>
-            translation-equivariant — pattern detected anywhere
+          <text x={16} y={height - padY * 2 - 52} fontSize={13} fill={COLORS.ink} fontFamily="JetBrains Mono, monospace">
+            = 3 · 3 · 1 = 9
           </text>
-          <text x={14} y={panelH - 18} fontSize={11} fill={COLORS.muted}>
-            ~10⁵× fewer parameters than the dense equivalent
+          <text x={16} y={height - padY * 2 - 28} fontSize={12} fill={COLORS.muted}>
+            one kernel slides across the whole image
           </text>
         </g>
       </svg>

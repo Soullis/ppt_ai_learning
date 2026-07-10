@@ -1,19 +1,18 @@
 import type { Chapter } from "@/components/slide/types";
 import { ClassificationDemo } from "@/components/viz/ClassificationDemo";
-import { PatchTokens } from "@/components/viz/PatchTokens";
 import { Callout } from "@/components/ui/Callout";
 import { M, MBlock } from "@/components/math/Math";
 
-export const ch09: Chapter = {
-  id: "ch09",
-  number: 9,
+export const ch10: Chapter = {
+  id: "ch10",
+  number: 10,
   part: 3,
   slug: "classification",
   title: "Image classification",
   subtitle: "From logits to labels",
   slides: [
     {
-      id: "ch09-00",
+      id: "ch10-00",
       title: "Classification output",
       eyebrow: "Task",
       layout: "split",
@@ -37,7 +36,7 @@ export const ch09: Chapter = {
       viz: <ClassificationDemo />,
     },
     {
-      id: "ch09-01",
+      id: "ch10-01",
       title: "Training loop",
       eyebrow: "Procedure",
       layout: "prose",
@@ -53,13 +52,13 @@ export const ch09: Chapter = {
           </ol>
           <p className="text-muted">
             Detection and segmentation extend this loop with structured outputs and different loss
-            terms (chapters 10 and 11).
+            terms (chapters 11 and 12).
           </p>
         </div>
       ),
     },
     {
-      id: "ch09-02",
+      id: "ch10-02",
       title: "Transfer learning",
       eyebrow: "Practice",
       layout: "prose",
@@ -76,14 +75,14 @@ export const ch09: Chapter = {
             <li>· Backbone features already encode edges, textures, parts</li>
           </ul>
           <Callout>
-            RF-DETR starts from DINOv2 (self-supervised ViT backbone) rather than training from
-            scratch — chapter 10.
+            ViT and other transformer backbones (chapter 6) appear in RF-DETR (chapter 11) via
+            DINOv2 pretraining rather than training a classifier from scratch.
           </Callout>
         </div>
       ),
     },
     {
-      id: "ch09-03",
+      id: "ch10-03",
       title: "Failure modes",
       eyebrow: "Generalisation",
       layout: "prose",
@@ -91,7 +90,7 @@ export const ch09: Chapter = {
         <div className="space-y-4">
           <p>
             <strong>Domain shift</strong> — train on sunny flights, test at dusk: accuracy drops.
-            Mitigate with diverse data and augmentation (chapter 12).
+            Mitigate with diverse data and augmentation (chapter 13).
           </p>
           <p>
             <strong>Class imbalance</strong> — rare classes dominate metrics unless stratified
@@ -103,28 +102,6 @@ export const ch09: Chapter = {
           </p>
         </div>
       ),
-    },
-    {
-      id: "ch09-04",
-      title: "Vision Transformer",
-      eyebrow: "Reference",
-      layout: "split",
-      tier: "reference",
-      content: (
-        <div className="space-y-4">
-          <p>
-            ViT (Dosovitskiy et al., 2020) splits an image into 16×16 patches, treats each patch
-            as a token, and runs a standard transformer encoder. With enough data, matches CNNs on
-            classification.
-          </p>
-          <Callout label="Reference">
-            <a className="underline" href="https://arxiv.org/abs/2010.11929" target="_blank" rel="noreferrer">
-              Dosovitskiy et al. 2020 — An Image is Worth 16×16 Words
-            </a>
-          </Callout>
-        </div>
-      ),
-      viz: <PatchTokens />,
     },
   ],
 };

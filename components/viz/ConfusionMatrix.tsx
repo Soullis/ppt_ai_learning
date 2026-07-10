@@ -14,30 +14,30 @@ const MATRIX: number[][] = [
 
 export function ConfusionMatrix({
   width = 640,
-  height = 480,
+  height = 500,
 }: {
   width?: number;
   height?: number;
 }) {
   const N = LABELS.length;
   const cell = 64;
-  const offsetX = (width - cell * N) / 2 + 20;
-  const offsetY = 70;
+  const offsetX = (width - cell * N) / 2;
+  const offsetY = 72;
   const max = Math.max(...MATRIX.flat());
 
-  // Region label positions
   const tlBox = { x: offsetX, y: offsetY, w: cell * (N - 1), h: cell * (N - 1) };
   const fpRow = { x: offsetX, y: offsetY + (N - 1) * cell, w: cell * (N - 1), h: cell };
   const fnCol = { x: offsetX + (N - 1) * cell, y: offsetY, w: cell, h: cell * (N - 1) };
+  const matrixBottom = offsetY + cell * N;
 
   return (
     <VizFrame
       width={width}
       height={height}
+      fit="fill"
       caption="rows = ground truth, columns = prediction · diagonal good, off-diagonal bad"
     >
       <svg viewBox={`0 0 ${width} ${height}`} className="h-full w-full">
-        {/* Region highlights */}
         <motion.rect
           x={tlBox.x - 4}
           y={tlBox.y - 4}
@@ -78,7 +78,6 @@ export function ConfusionMatrix({
           transition={{ duration: 0.4, delay: 1.9 }}
         />
 
-        {/* Column labels */}
         {LABELS.map((l, j) => (
           <text
             key={`col-${l}`}
@@ -94,7 +93,7 @@ export function ConfusionMatrix({
         ))}
         <text
           x={offsetX + (cell * N) / 2}
-          y={offsetY - 38}
+          y={offsetY - 40}
           textAnchor="middle"
           fontSize={10}
           fontFamily="JetBrains Mono, monospace"
@@ -103,7 +102,7 @@ export function ConfusionMatrix({
         >
           predicted
         </text>
-        {/* Row labels */}
+
         {LABELS.map((l, i) => (
           <text
             key={`row-${l}`}
@@ -118,19 +117,18 @@ export function ConfusionMatrix({
           </text>
         ))}
         <text
-          x={offsetX - 50}
+          x={offsetX - 52}
           y={offsetY + (cell * N) / 2}
           textAnchor="middle"
           fontSize={10}
           fontFamily="JetBrains Mono, monospace"
           fill={COLORS.muted}
           style={{ textTransform: "uppercase", letterSpacing: "0.16em" }}
-          transform={`rotate(-90, ${offsetX - 50}, ${offsetY + (cell * N) / 2})`}
+          transform={`rotate(-90, ${offsetX - 52}, ${offsetY + (cell * N) / 2})`}
         >
           ground truth
         </text>
 
-        {/* Cells */}
         {MATRIX.flatMap((row, i) =>
           row.map((v, j) => {
             const t = v / max;
@@ -165,38 +163,41 @@ export function ConfusionMatrix({
           }),
         )}
 
-        {/* Region annotations */}
         <motion.g
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 2.1 }}
         >
           <text
-            x={offsetX + cell * N + 16}
-            y={offsetY + cell / 2 + 5}
-            fontSize={11}
-            fontFamily="JetBrains Mono, monospace"
-            fill={COLORS.red}
-          >
-            ← false negatives (missed)
-          </text>
-          <text
-            x={offsetX + cell * N + 16}
-            y={offsetY + cell * N - cell / 2 + 5}
-            fontSize={11}
-            fontFamily="JetBrains Mono, monospace"
-            fill={COLORS.honey}
-          >
-            ← false positives (hallucinated)
-          </text>
-          <text
-            x={offsetX + 12}
+            x={offsetX + cell * (N - 1) / 2}
             y={offsetY - 56}
+            textAnchor="middle"
             fontSize={11}
             fontFamily="JetBrains Mono, monospace"
             fill={COLORS.green}
           >
             true positives along the diagonal
+          </text>
+
+          <text
+            x={offsetX + fpRow.w / 2}
+            y={matrixBottom + 22}
+            textAnchor="middle"
+            fontSize={11}
+            fontFamily="JetBrains Mono, monospace"
+            fill={COLORS.honey}
+          >
+            background row → false positives (prediction, no GT object)
+          </text>
+          <text
+            x={offsetX + (N - 1) * cell + cell / 2}
+            y={matrixBottom + 42}
+            textAnchor="middle"
+            fontSize={11}
+            fontFamily="JetBrains Mono, monospace"
+            fill={COLORS.red}
+          >
+            background column → false negatives (missed GT)
           </text>
         </motion.g>
       </svg>

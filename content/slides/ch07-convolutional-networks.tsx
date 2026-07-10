@@ -43,16 +43,30 @@ export const ch07: Chapter = {
       id: "ch07-01",
       title: "Convolution intuition",
       eyebrow: "Convolution",
-      layout: "split",
+      layout: "wideViz",
       content: (
-        <ol className="list-decimal space-y-2 pl-5 text-[14px]">
-          <li>Place a small kernel on the input patch</li>
-          <li>Multiply element-wise and sum → one output value</li>
-          <li>Slide the kernel across all positions</li>
-          <li>Same weights everywhere — far fewer parameters than dense</li>
-        </ol>
+        <div className="space-y-4 text-[14px]">
+          <ol className="list-decimal space-y-2 pl-5">
+            <li>Place a small kernel on an input patch</li>
+            <li>Multiply element-wise and sum → one output value</li>
+            <li>Slide the kernel across all positions</li>
+            <li>Reuse the same kernel weights everywhere</li>
+          </ol>
+          <div className="space-y-2 border-t border-stroke pt-4">
+            <p>
+              <strong>Dense layer</strong> on a 6×6 greyscale patch: each of the 36 pixels connects
+              to the output with its own weight → 36 parameters per output neuron. On a 1920×1080
+              RGB frame that is roughly 6 million weights for a single output.
+            </p>
+            <p>
+              <strong>Convolution</strong> with a 3×3 kernel uses 9 weights total, applied at every
+              location. The network learns one edge detector once, not a separate copy per pixel
+              position.
+            </p>
+          </div>
+        </div>
       ),
-      viz: <ConvIntuition height={320} />,
+      viz: <ConvIntuition />,
     },
     {
       id: "ch07-02",
@@ -127,15 +141,28 @@ export const ch07: Chapter = {
       id: "ch07-05",
       title: "Receptive field",
       eyebrow: "Coverage",
-      layout: "split",
+      layout: "scrollSplit",
       content: (
-        <div className="space-y-4">
+        <div className="space-y-4 text-[14px]">
           <p>
-            Each deeper unit integrates information from a larger region of the input. RF grows with
-            kernel size, depth, and stride:
+            The <strong>receptive field</strong> of a neuron is the region of the original input
+            that can affect its output. A conv layer with a 3×3 kernel only reads a 3×3 patch, but
+            deeper neurons read patches that combine earlier neurons, so the effective region grows
+            with depth.
           </p>
+          <p>
+            Click each layer in the diagram. The yellow box on the input image is the receptive
+            field: every pixel inside it can change that neuron&apos;s value. After pooling with
+            stride 2, each step in the feature map spans two input pixels, so the field grows
+            faster.
+          </p>
+          <p>Recurrence when stacking layers (kernel size <M>k</M>, stride <M>s</M>):</p>
           <MBlock>{"r_\\ell = r_{\\ell-1} + (k_\\ell - 1)\\prod_{i=1}^{\\ell-1} s_i"}</MBlock>
-          <p className="text-muted">Deep stacks are needed to relate distant parts of an object.</p>
+          <p className="text-muted">
+            Read it as: start from the previous field size, then add how far the new kernel reaches
+            on the input, scaled by all strides below. Deep stacks are what let a final layer relate
+            distant parts of an object, such as a wing tip and fuselage.
+          </p>
         </div>
       ),
       viz: <ReceptiveField />,
@@ -167,12 +194,27 @@ export const ch07: Chapter = {
       id: "ch07-07",
       title: "AlexNet and ImageNet 2012",
       eyebrow: "2012",
-      layout: "split",
+      layout: "scrollSplit",
       content: (
         <div className="space-y-4">
           <p>
-            AlexNet cut ImageNet top-5 error from 26.2% to 16.4% in one year. Data (ImageNet),
-            compute (GPUs), and tricks (ReLU, dropout, augmentation) aligned.
+            <strong>ImageNet</strong> is a large image dataset built by Fei-Fei Li and colleagues at
+            Stanford (2009 onward). It contains about 14 million labelled images grouped into roughly
+            22 000 categories. The subset used in competition, ILSVRC, has 1.2 million training images
+            across <strong>1000 object classes</strong> (dog breeds, vehicles, tools, etc.).
+          </p>
+          <p>
+            The task is <strong>image classification</strong>: given one image, predict its class.
+            Each year, teams submitted models to the ImageNet Large Scale Visual Recognition Challenge
+            (ILSVRC) and were ranked by top-5 error (correct if the true class appears among the five
+            highest scored labels). For a decade this was the standard benchmark for vision models,
+            and pretrained ImageNet weights are still the usual starting point for fine tuning on
+            smaller mission datasets.
+          </p>
+          <p>
+            <strong>AlexNet</strong> (Krizhevsky, Sutskever, Hinton) cut ILSVRC top-5 error from
+            26.2% to 16.4% in 2012, the first clear GPU trained CNN win. ReLU, dropout, and data
+            augmentation mattered as much as the eight layer architecture.
           </p>
           <Callout label="Reference">
             <a
@@ -182,6 +224,10 @@ export const ch07: Chapter = {
               rel="noreferrer"
             >
               Krizhevsky, Sutskever, Hinton 2012
+            </a>
+            {" · "}
+            <a className="underline" href="https://image-net.org/" target="_blank" rel="noreferrer">
+              image-net.org
             </a>
           </Callout>
         </div>
@@ -252,7 +298,7 @@ export const ch07: Chapter = {
       content: (
         <div className="space-y-4">
           <p><strong>Pipeline:</strong> conv → activation → pool → stack → residual skip → classifier head.</p>
-          <p>Next: chapter 8 — computer vision tasks (classification, detection, segmentation).</p>
+          <p>Next: chapter 9 — computer vision tasks (classification, detection, segmentation).</p>
         </div>
       ),
     },

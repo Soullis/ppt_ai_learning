@@ -1,19 +1,20 @@
 import type { Chapter } from "@/components/slide/types";
 import { MaskOverlay } from "@/components/viz/Scene";
+import { SemanticInstanceCompare } from "@/components/viz/SemanticInstanceCompare";
 import { BboxFormats } from "@/components/viz/BboxFormats";
 import { VideoDemo } from "@/components/viz/VideoDemo";
 import { Callout } from "@/components/ui/Callout";
 
-export const ch08: Chapter = {
-  id: "ch08",
-  number: 8,
+export const ch09: Chapter = {
+  id: "ch09",
+  number: 9,
   part: 3,
   slug: "cv-tasks",
   title: "Computer vision tasks",
   subtitle: "Same sensor, different outputs",
   slides: [
     {
-      id: "ch08-00",
+      id: "ch09-00",
       title: "Task taxonomy",
       eyebrow: "Overview",
       layout: "prose",
@@ -53,11 +54,11 @@ export const ch08: Chapter = {
       ),
     },
     {
-      id: "ch08-01",
+      id: "ch09-01",
       title: "Detection preview",
       eyebrow: "Detection",
       layout: "split",
-      notes: "4 min teaser. Chapter 9 goes deep.",
+      notes: "4 min teaser. Chapter 11 goes deep.",
       content: (
         <div className="space-y-4">
           <p>
@@ -78,7 +79,7 @@ export const ch08: Chapter = {
       ),
     },
     {
-      id: "ch08-02",
+      id: "ch09-02",
       title: "Bounding box formats",
       eyebrow: "Formats",
       layout: "split",
@@ -105,11 +106,11 @@ export const ch08: Chapter = {
       viz: <BboxFormats />,
     },
     {
-      id: "ch08-03",
+      id: "ch09-03",
       title: "Segmentation preview",
       eyebrow: "Segmentation",
       layout: "split",
-      notes: "4 min teaser. Chapter 10 goes deep.",
+      notes: "4 min teaser. Chapter 12 goes deep.",
       content: (
         <div className="space-y-4">
           <p>
@@ -129,7 +130,7 @@ export const ch08: Chapter = {
       ),
     },
     {
-      id: "ch08-04",
+      id: "ch09-04",
       title: "Semantic vs instance",
       eyebrow: "Segmentation types",
       layout: "split",
@@ -146,10 +147,10 @@ export const ch08: Chapter = {
           </p>
         </div>
       ),
-      viz: <MaskOverlay mode="semantic" />,
+      viz: <SemanticInstanceCompare />,
     },
     {
-      id: "ch08-05",
+      id: "ch09-05",
       title: "Keypoints and depth",
       eyebrow: "Reference",
       layout: "split",

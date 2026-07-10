@@ -1,14 +1,14 @@
 import type { Chapter } from "@/components/slide/types";
 
-export const ch15: Chapter = {
-  id: "ch15",
-  number: 15,
+export const ch16: Chapter = {
+  id: "ch16",
+  number: 16,
   part: 5,
   slug: "references",
   title: "References",
   slides: [
     {
-      id: "ch15-00",
+      id: "ch16-00",
       title: "Where to dig next",
       eyebrow: "Reading and courses",
       layout: "prose",
@@ -83,7 +83,7 @@ export const ch15: Chapter = {
       ),
     },
     {
-      id: "ch15-01",
+      id: "ch16-01",
       title: "Questions",
       eyebrow: "Discussion",
       layout: "title",

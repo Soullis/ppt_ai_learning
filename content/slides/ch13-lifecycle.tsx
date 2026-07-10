@@ -11,23 +11,23 @@ import { CodeBlock } from "@/components/ui/CodeBlock";
 import { Callout } from "@/components/ui/Callout";
 import { M, MBlock } from "@/components/math/Math";
 
-export const ch12: Chapter = {
-  id: "ch12",
-  number: 12,
+export const ch13: Chapter = {
+  id: "ch13",
+  number: 13,
   part: 5,
   slug: "lifecycle",
   title: "Training and evaluation",
   subtitle: "From raw flights to a deployable model",
   slides: [
     {
-      id: "ch12-00",
+      id: "ch13-00",
       title: "The end-to-end pipeline",
       eyebrow: "Pipeline",
       layout: "fullViz",
       viz: <LifecyclePipeline />,
     },
     {
-      id: "ch12-01",
+      id: "ch13-01",
       title: "Annotation",
       eyebrow: "Roboflow workflow",
       layout: "scrollProse",
@@ -61,7 +61,7 @@ uploader.upload_dataset(
       ),
     },
     {
-      id: "ch12-02",
+      id: "ch13-02",
       title: "Format conversion",
       eyebrow: "COCO ↔ YOLO",
       layout: "scrollProse",
@@ -89,7 +89,7 @@ yaml_path = FormatConverter("datasets/imav-gate", "datasets/imav-gate-yolo").con
       ),
     },
     {
-      id: "ch12-03",
+      id: "ch13-03",
       title: "Stratified splitting",
       eyebrow: "Stratified splits",
       layout: "split",
@@ -114,7 +114,7 @@ Stratifier(
       viz: <SplitBar />,
     },
     {
-      id: "ch12-04a",
+      id: "ch13-04a",
       title: "Why augment",
       eyebrow: "Three benefits at once",
       layout: "prose",
@@ -160,7 +160,7 @@ Stratifier(
       ),
     },
     {
-      id: "ch12-04",
+      id: "ch13-04",
       title: "The augmentation menu",
       eyebrow: "Pixel · geometric · composite",
       layout: "split",
@@ -203,7 +203,7 @@ Stratifier(
       viz: <AugmentationGallery />,
     },
     {
-      id: "ch12-05",
+      id: "ch13-05",
       title: "Class balancing",
       eyebrow: "Long tail · short tail",
       layout: "split",
@@ -231,7 +231,7 @@ Stratifier(
       viz: <ClassHist />,
     },
     {
-      id: "ch12-06",
+      id: "ch13-06",
       title: "Training",
       eyebrow: "End-to-end",
       layout: "split",
@@ -264,117 +264,68 @@ result = detector.train(TrainingConfig(
       viz: <TrainingCurves />,
     },
     {
-      id: "ch12-07",
+      id: "ch13-07",
       title: "Evaluation metrics",
       eyebrow: "What numbers mean",
       layout: "prose",
       content: (
-        <div className="space-y-5">
-          <div>
-            <div className="mb-1 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-              Precision · how often we are right when we predict
-            </div>
-            <MBlock>{"P = \\frac{TP}{TP + FP}"}</MBlock>
-            <p className="text-muted">
-              Low precision = many false alarms. The model says &quot;gate&quot; on things that aren&apos;t gates.
-            </p>
-          </div>
-          <div>
-            <div className="mb-1 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-              Recall · how much of the truth we find
-            </div>
-            <MBlock>{"R = \\frac{TP}{TP + FN}"}</MBlock>
-            <p className="text-muted">
-              Low recall = many misses. Real gates that should have triggered a detection.
-            </p>
-          </div>
-          <div>
-            <div className="mb-1 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-              F1 · harmonic mean of P and R
-            </div>
-            <MBlock>{"F_1 = \\frac{2 P R}{P + R}"}</MBlock>
-          </div>
-          <div>
-            <div className="mb-1 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-              mAP · the COCO standard for detection
-            </div>
-            <MBlock>
-              {"\\mathrm{mAP}@\\tau = \\frac{1}{C}\\sum_{c=1}^{C} \\int_0^1 P_c(r)\\,dr \\quad \\text{at IoU} \\geq \\tau"}
-            </MBlock>
-            <p className="text-muted">
-              <strong>mAP@50</strong> averages AP per class at IoU ≥ 0.5.{" "}
-              <strong>mAP@50:95</strong> averages also over IoU ∈ [0.5, 0.95] in
-              steps of 0.05 — stricter, harder to improve, the headline COCO
-              number.
-            </p>
-          </div>
+        <div className="space-y-4">
+          <p>
+            Precision, recall, F1, AP, and mAP are defined in chapter 11. After{" "}
+            <code className="font-mono text-[12px]">detector.train()</code>, Nectar runs validation
+            and logs mAP@50 and per class AP. The slides below show how to read those curves on a
+            real validation run.
+          </p>
         </div>
       ),
     },
     {
-      id: "ch12-08",
+      id: "ch13-08",
       title: "Precision–recall curves",
-      eyebrow: "The shape behind the number",
+      eyebrow: "Reading validation output",
       layout: "split",
       content: (
         <div className="space-y-4">
           <p>
-            Sweep the confidence threshold from high to low. Each operating point
-            gives a (recall, precision) pair. The area under the curve is AP.
+            TensorBoard and the validation report plot precision vs recall as confidence threshold
+            sweeps. Each operating point is one threshold choice on the same trained weights.
           </p>
           <p className="text-muted">
-            Per-class curves expose where the model struggles. Here, posts at AP 0.65
-            are the obvious next class to label more of.
+            Per class curves expose where to label next: here, posts at AP 0.65 suggest adding more
+            post examples to training.
           </p>
         </div>
       ),
       viz: <PRCurve />,
     },
     {
-      id: "ch12-09",
+      id: "ch13-09",
       title: "Confusion matrix",
-      eyebrow: "Where the mistakes go",
+      eyebrow: "Reading validation output",
       layout: "split",
       content: (
         <div className="space-y-4">
           <p>
-            Each row is a ground-truth class, each column is what the model
-            predicted. The diagonal is correct, everything else is a mistake
-            with a name:
+            After evaluation, inspect which classes are confused. The diagonal is correct; off
+            diagonal cells name the mistake type (see chapter 11 for definitions).
           </p>
-          <ul className="space-y-2 text-[14px] text-ink/85">
-            <li>
-              · <span style={{ color: "#2E7D5C" }}>green</span> — true positives
-              on the diagonal.
-            </li>
-            <li>
-              · <span style={{ color: "#E8B53C" }}>honey</span> — bottom row, the{" "}
-              <em>background</em> row: false positives. The model imagined an
-              object where there was none.
-            </li>
-            <li>
-              · <span style={{ color: "#B23A48" }}>red</span> — last column,
-              the <em>background</em> column: false negatives. A real object
-              the model missed entirely.
-            </li>
-          </ul>
           <p className="text-muted">
-            In this example, posts are confused with background — fix by adding
-            posts to training, especially on cluttered terrain.
+            In this example, posts are confused with background — add post labels on cluttered
+            terrain, or lower confidence threshold if recall is the bottleneck.
           </p>
         </div>
       ),
       viz: <ConfusionMatrix />,
     },
     {
-      id: "ch12-10",
+      id: "ch13-10",
       title: "Common failure modes",
       eyebrow: "Loss curves",
       layout: "fullViz",
       viz: <FailureModes />,
     },
     {
-      id: "ch12-11",
+      id: "ch13-11",
       title: "Diagnosing in practice",
       eyebrow: "First questions to ask",
       layout: "prose",

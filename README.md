@@ -66,7 +66,7 @@ ai-learning/
 └─ tailwind.config.ts
 ```
 
-## Chapters (15, five parts)
+## Chapters (16, five parts)
 
 | Part | #  | Slug                    | Title                       |
 |------|----|-------------------------|-----------------------------|
@@ -75,16 +75,17 @@ ai-learning/
 | I    | 3  | `paradigms`             | Learning paradigms          |
 | II   | 4  | `classical-ml`          | Classical machine learning  |
 | II   | 5  | `deep-learning`         | Deep learning foundations   |
-| II   | 6  | `frameworks`            | Frameworks and ecosystem    |
+| II   | 6  | `network-architectures` | Neural network architectures|
 | II   | 7  | `convolutional-networks`| Convolutional networks      |
-| III  | 8  | `cv-tasks`              | Computer vision tasks       |
-| III  | 9  | `classification`        | Image classification        |
-| IV   | 10 | `detection`             | Object detection            |
-| IV   | 11 | `segmentation`          | Segmentation                |
-| V    | 12 | `lifecycle`             | Training and evaluation     |
-| V    | 13 | `deployment`            | Deployment to the edge      |
-| V    | 14 | `nectar`                | The Nectar AI module        |
-| V    | 15 | `references`            | References                  |
+| II   | 8  | `frameworks`            | Frameworks and ecosystem    |
+| III  | 9  | `cv-tasks`              | Computer vision tasks       |
+| III  | 10 | `classification`        | Image classification        |
+| IV   | 11 | `detection`             | Object detection            |
+| IV   | 12 | `segmentation`          | Segmentation                |
+| V    | 13 | `lifecycle`             | Training and evaluation     |
+| V    | 14 | `deployment`            | Deployment to the edge      |
+| V    | 15 | `nectar`                | The Nectar AI module        |
+| V    | 16 | `references`            | References                  |
 
 ## Lesson path
 

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { COLORS, VizFrame } from "./common";
 
 type Box = {
@@ -34,17 +33,26 @@ function iou(a: Box, b: Box) {
   return union ? inter / union : 0;
 }
 
-function nms(boxes: Box[], thr: number) {
+function nmsSteps(boxes: Box[], thr: number) {
   const order = [...boxes].sort((a, b) => b.conf - a.conf);
-  const keep: Box[] = [];
+  const kept: Box[] = [];
+  const suppressed = new Set<string>();
+  const steps: { kept: string; suppressed: string[] }[] = [];
+
   while (order.length) {
     const top = order.shift()!;
-    keep.push(top);
+    kept.push(top);
+    const removed: string[] = [];
     for (let i = order.length - 1; i >= 0; i--) {
-      if (iou(top, order[i]) > thr) order.splice(i, 1);
+      if (iou(top, order[i]) > thr) {
+        removed.push(order[i].id);
+        suppressed.add(order[i].id);
+        order.splice(i, 1);
+      }
     }
+    steps.push({ kept: top.id, suppressed: removed });
   }
-  return keep;
+  return { kept, suppressed, steps };
 }
 
 export function NMSDemo({
@@ -55,66 +63,81 @@ export function NMSDemo({
   height?: number;
 }) {
   const [thr, setThr] = useState(0.5);
-  const kept = nms(RAW, thr);
+  const [stepIdx, setStepIdx] = useState(0);
+  const { kept, suppressed, steps } = nmsSteps(RAW, thr);
   const keptIds = new Set(kept.map((b) => b.id));
+  const current = steps[Math.min(stepIdx, steps.length - 1)];
 
   return (
     <div className="flex w-full max-w-full flex-col items-center">
-      <VizFrame width={width} height={height} caption="non-maximum suppression — IoU > threshold are dropped">
+      <VizFrame width={width} height={height} fit="fill" caption="greedy NMS: sort by score · keep top · suppress IoU overlap">
         <svg viewBox={`0 0 ${width} ${height}`} className="h-full w-full">
           {RAW.map((b) => {
             const isKept = keptIds.has(b.id);
+            const isCurrentKept = current?.kept === b.id;
+            const isCurrentSuppressed = current?.suppressed.includes(b.id);
             const color = b.cluster === 0 ? COLORS.accent : COLORS.honey;
             return (
-              <motion.g
-                key={b.id}
-                animate={{ opacity: isKept ? 1 : 0.18 }}
-                transition={{ duration: 0.3 }}
-              >
+              <g key={b.id}>
                 <rect
                   x={b.x}
                   y={b.y}
                   width={b.w}
                   height={b.h}
                   fill={color}
-                  fillOpacity={isKept ? 0.12 : 0.04}
+                  fillOpacity={isKept ? 0.14 : 0.04}
                   stroke={color}
-                  strokeWidth={isKept ? 2 : 1}
-                  strokeDasharray={isKept ? undefined : "3 3"}
-                />
-                <rect
-                  x={b.x}
-                  y={b.y - 18}
-                  width={56}
-                  height={18}
-                  fill={isKept ? color : COLORS.muted}
+                  strokeWidth={isCurrentKept ? 3 : isKept ? 2 : 1}
+                  strokeDasharray={isKept ? undefined : "4 3"}
+                  opacity={isCurrentSuppressed ? 0.35 : isKept ? 1 : 0.35}
                 />
                 <text
                   x={b.x + 6}
-                  y={b.y - 5}
+                  y={b.y - 6}
                   fontSize={11}
                   fontFamily="JetBrains Mono, monospace"
-                  fill={COLORS.surface}
+                  fill={isKept ? COLORS.ink : COLORS.muted}
                 >
                   {b.conf.toFixed(2)}
                 </text>
-              </motion.g>
+              </g>
             );
           })}
+          <text x={16} y={height - 16} fontSize={11} fontFamily="JetBrains Mono, monospace" fill={COLORS.muted}>
+            step {stepIdx + 1}/{steps.length}: keep {current?.kept} · suppress {current?.suppressed.length} box(es)
+          </text>
         </svg>
       </VizFrame>
-      <div className="mt-4 w-full max-w-[480px] font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-        IoU threshold = {thr.toFixed(2)}
-        <input
-          type="range"
-          min={0.1}
-          max={0.95}
-          step={0.01}
-          value={thr}
-          onChange={(e) => setThr(parseFloat(e.target.value))}
-          className="mt-1 w-full accent-ink"
-        />
-        <div className="mt-2 text-ink">{kept.length} of {RAW.length} kept</div>
+      <div className="mt-3 w-full max-w-[520px] space-y-2 font-mono text-[11px]">
+        <div className="flex items-center gap-2">
+          <span className="text-muted">IoU τ</span>
+          <input
+            type="range"
+            min={0.1}
+            max={0.95}
+            step={0.01}
+            value={thr}
+            onChange={(e) => {
+              setThr(parseFloat(e.target.value));
+              setStepIdx(0);
+            }}
+            className="flex-1 accent-ink"
+          />
+          <span>{thr.toFixed(2)}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-muted">step</span>
+          <input
+            type="range"
+            min={0}
+            max={Math.max(0, steps.length - 1)}
+            step={1}
+            value={stepIdx}
+            onChange={(e) => setStepIdx(parseInt(e.target.value, 10))}
+            className="flex-1 accent-ink"
+          />
+        </div>
+        <div className="text-muted">{kept.length} of {RAW.length} kept after full NMS</div>
       </div>
     </div>
   );

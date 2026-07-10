@@ -9,7 +9,6 @@ import { GradDescentExplainer } from "@/components/viz/GradDescentExplainer";
 import { BackpropChain } from "@/components/viz/BackpropChain";
 import { LossSurface } from "@/components/viz/LossSurface";
 import { RegularizationViz } from "@/components/viz/RegularizationViz";
-import { ArchFamilyMap } from "@/components/viz/ArchFamilyMap";
 import { Callout } from "@/components/ui/Callout";
 import { CodeBlock } from "@/components/ui/CodeBlock";
 import { M, MBlock } from "@/components/math/Math";
@@ -56,9 +55,9 @@ export const ch05: Chapter = {
             Hinton, and Williams in 1986, gave a practical way to train many layers at once, and it
             became the default approach once enough labelled data and enough compute were available,
             GPU training on ImageNet in 2012 is the year usually cited for that shift. Chapter 1 has
-            the full timeline. This chapter builds every piece of that story in order: the neuron, why
-            depth requires non-linearity, how a network is actually trained end to end, and the
-            families of architecture that use these ideas today.
+            the full timeline. This chapter builds the training machinery in order: the neuron, why
+            depth requires non-linearity, how a network is trained end to end. Chapter 6 covers the
+            architecture families that reuse this same loop.
           </p>
         </div>
       ),
@@ -116,6 +115,48 @@ export const ch05: Chapter = {
         </div>
       ),
       viz: <XORProblem />,
+    },
+    {
+      id: "ch05-02b",
+      title: "XOR by hand: one training step",
+      eyebrow: "Worked example",
+      layout: "scrollProse",
+      tier: "deep",
+      notes:
+        "Board script. PT: estamos achando como cada peso afeta a perda final; com a regra da cadeia obtemos as derivadas locais; o gradiente nos dá direção e magnitude em que a perda sobe mais rápido; atualizamos o peso no sentido oposto.",
+      content: (
+        <div className="space-y-4 text-[14px]">
+          <p>
+            Network: 2 inputs → 2 hidden (sigmoid) → 1 output (sigmoid). Example{" "}
+            <M>{"x=(1,0)"}</M>, target <M>{"y=1"}</M>. Initial weights (illustrative):
+          </p>
+          <MBlock>
+            {"W^{(1)}=\\begin{bmatrix}0.5&-0.5\\\\0.5&0.5\\end{bmatrix},\\ b^{(1)}=0,\\quad W^{(2)}=[1\\ {-1}],\\ b^{(2)}=0"}
+          </MBlock>
+          <p>
+            <strong>Forward.</strong> Hidden pre activations{" "}
+            <M>{"z^{(1)}=W^{(1)}x=[0.5,0.5]^\\top"}</M>, hidden activations{" "}
+            <M>{"h=\\sigma(z^{(1)}\\!)\\approx[0.62,0.62]^\\top"}</M>. Output{" "}
+            <M>{"\\hat p=\\sigma(W^{(2)}h)\\approx\\sigma(0)\\approx0.5"}</M>.
+          </p>
+          <p>
+            <strong>Loss.</strong> Binary cross entropy for this one example:{" "}
+            <M>{"\\mathcal{L}=-\\log\\hat p\\approx0.69"}</M>.
+          </p>
+          <p>
+            <strong>Backward (one edge).</strong> Output delta{" "}
+            <M>{"\\delta^{(2)}=\\hat p-y=-0.5"}</M>. Gradient for weight{" "}
+            <M>{"W^{(2)}_1"}</M> (first hidden → output):{" "}
+            <M>{"\\partial\\mathcal{L}/\\partial W^{(2)}_1=\\delta^{(2)}\\,h_1\\approx-0.31"}</M>.
+            The negative sign means increasing this weight would <em>reduce</em> the loss.
+          </p>
+          <p>
+            <strong>Update.</strong> With learning rate <M>{"\\eta=0.5"}</M>:{" "}
+            <M>{"W^{(2)}_1\\leftarrow W^{(2)}_1-\\eta\\,(\\partial\\mathcal{L}/\\partial W^{(2)}_1)\\approx1.16"}</M>.
+            Repeat forward and backward for the other weights and for all four XOR points each epoch.
+          </p>
+        </div>
+      ),
     },
     {
       id: "ch05-03",
@@ -238,6 +279,63 @@ export const ch05: Chapter = {
     },
     {
       id: "ch05-07",
+      title: "Entropy",
+      eyebrow: "Information",
+      layout: "scrollProse",
+      content: (
+        <div className="space-y-4">
+          <p>
+            Entropy measures how uncertain a probability distribution is. For discrete classes with
+            probabilities <M>p_k</M>:
+          </p>
+          <MBlock>{"H(p) = -\\sum_k p_k \\log p_k"}</MBlock>
+          <p>
+            High entropy when the distribution is flat (many outcomes equally likely). Low entropy
+            when one class dominates. The log is usually base 2 (bits) or natural log (nats); the
+            choice only scales the number, not the ordering.
+          </p>
+          <p className="text-muted">
+            Example: fair coin <M>{"p=(0.5,0.5)"}</M> has entropy 1 bit. Certain outcome{" "}
+            <M>{"p=(1,0)"}</M> has entropy 0.
+          </p>
+        </div>
+      ),
+    },
+    {
+      id: "ch05-08",
+      title: "Cross entropy and KL divergence",
+      eyebrow: "Objective",
+      layout: "scrollProse",
+      content: (
+        <div className="space-y-4">
+          <p>
+            Cross entropy compares a true distribution <M>p</M> to a predicted distribution{" "}
+            <M>{"\\hat p"}</M>:
+          </p>
+          <MBlock>{"H(p, \\hat p) = -\\sum_k p_k \\log \\hat p_k"}</MBlock>
+          <p>
+            When the target is a one hot label, only one term survives. For two classes this is
+            binary cross entropy (BCE). For <M>K</M> classes with softmax output:
+          </p>
+          <MBlock>
+            {"\\mathcal{L}_{\\mathrm{CE}} = -\\frac{1}{N}\\sum_i \\sum_k y_{ik} \\log \\hat p_{ik}"}
+          </MBlock>
+          <p>
+            KL divergence measures how much extra uncertainty <M>{"\\hat p"}</M> adds beyond the
+            true distribution:
+          </p>
+          <MBlock>{"D_{\\mathrm{KL}}(p \\| \\hat p) = \\sum_k p_k \\log\\frac{p_k}{\\hat p_k}"}</MBlock>
+          <p className="text-muted">
+            When <M>p</M> is fixed, cross entropy decomposes as{" "}
+            <M>{"H(p,\\hat p)=H(p)+D_{\\mathrm{KL}}(p\\|\\hat p)"}</M>. Minimising cross entropy
+            therefore pushes <M>{"\\hat p"}</M> toward <M>p</M>. Knowledge distillation uses a
+            teacher&apos;s soft probabilities as <M>p</M> instead of hard labels.
+          </p>
+        </div>
+      ),
+    },
+    {
+      id: "ch05-09",
       title: "Loss functions",
       eyebrow: "Objective",
       layout: "scrollProse",
@@ -257,20 +355,15 @@ export const ch05: Chapter = {
             are penalised much more heavily than small ones, and the function is smooth everywhere,
             which optimisation needs.
           </p>
-          <p>Classification problems use cross entropy. For two classes:</p>
+          <p>Classification problems use cross entropy from the previous slide. For two classes:</p>
           <MBlock>
             {"\\mathcal{L}_{\\mathrm{BCE}} = -\\frac{1}{N}\\sum_i \\big[y_i \\log \\hat p_i + (1-y_i)\\log(1-\\hat p_i)\\big]"}
           </MBlock>
           <p className="text-muted">
             It compares the predicted probability <M>{"\\hat p_i"}</M> to the true label 0 or 1, and
             grows without bound as a confident prediction gets it wrong, pushing training hard exactly
-            when the model is confidently mistaken. For more than two classes, the same idea
-            generalises over the softmax output of all <M>K</M> classes:
+            when the model is confidently mistaken.
           </p>
-          <MBlock>
-            {"\\mathcal{L}_{\\mathrm{CE}} = -\\frac{1}{N}\\sum_i \\sum_k y_{ik} \\log \\hat p_{ik}"}
-          </MBlock>
-          <p className="text-muted">Cross entropy measures the divergence between the true distribution and the predicted one.</p>
           <div className="overflow-hidden rounded-md border border-stroke text-sm">
             <table className="w-full border-collapse">
               <thead>
@@ -283,8 +376,8 @@ export const ch05: Chapter = {
                 {[
                   ["Regression", "MSE, MAE"],
                   ["Classification", "cross-entropy"],
-                  ["Detection", "cls + box (GIoU/CIoU) + objectness — ch. 10"],
-                  ["Segmentation", "per-pixel CE + Dice — ch. 11"],
+                  ["Detection", "cls + box (GIoU/CIoU) + objectness — ch. 11"],
+                  ["Segmentation", "per-pixel CE + Dice — ch. 12"],
                 ].map(([t, l]) => (
                   <tr key={t} className="border-b border-stroke">
                     <td className="px-4 py-2">{t}</td>
@@ -298,17 +391,21 @@ export const ch05: Chapter = {
       ),
     },
     {
-      id: "ch05-08",
+      id: "ch05-10",
       title: "Backpropagation",
       eyebrow: "Gradients",
       layout: "scrollSplit",
+      notes:
+        "PT: estamos achando como cada peso afeta a perda final; com a regra da cadeia obtemos as derivadas locais; o gradiente nos dá direção e magnitude em que a perda sobe mais rápido; atualizamos o peso no sentido oposto.",
       content: (
         <div className="space-y-4">
           <p>
             Once the loss is defined, we need to know how to change every weight to make it smaller.
-            Backpropagation computes exactly this: for every parameter, the partial derivative of the
-            loss with respect to that parameter, the direction and rate at which the loss changes if
-            we nudge it.
+            For each weight, the gradient is a single number: how much the final loss would increase
+            if that weight increased slightly. Backpropagation computes this by the chain rule: local
+            derivatives along the path from the loss back to that weight multiply into the direction
+            and magnitude of steepest increase. Gradient descent moves the weight in the opposite
+            direction.
           </p>
           <p>
             The network is a composition of functions, one per layer, followed by the loss. To get the
@@ -346,7 +443,7 @@ export const ch05: Chapter = {
       viz: <BackpropChain />,
     },
     {
-      id: "ch05-09",
+      id: "ch05-11",
       title: "Gradient descent",
       eyebrow: "Optimisation",
       layout: "scrollSplit",
@@ -383,7 +480,7 @@ export const ch05: Chapter = {
       viz: <GradDescentExplainer />,
     },
     {
-      id: "ch05-10",
+      id: "ch05-12",
       title: "Batch, mini-batch, and stochastic gradient descent",
       eyebrow: "Optimisation",
       layout: "split",
@@ -408,7 +505,7 @@ export const ch05: Chapter = {
       viz: <BatchSizeDemo />,
     },
     {
-      id: "ch05-11",
+      id: "ch05-13",
       title: "Optimisers: momentum, RMSProp, Adam",
       eyebrow: "Beyond plain SGD",
       layout: "scrollSplit",
@@ -458,10 +555,11 @@ export const ch05: Chapter = {
       viz: <LossSurface />,
     },
     {
-      id: "ch05-12",
+      id: "ch05-14",
       title: "Weight initialisation",
       eyebrow: "Training",
       layout: "prose",
+      tier: "reference",
       content: (
         <div className="space-y-4">
           <p>
@@ -481,7 +579,7 @@ export const ch05: Chapter = {
       ),
     },
     {
-      id: "ch05-13",
+      id: "ch05-15",
       title: "Vanishing and exploding gradients",
       eyebrow: "Training",
       layout: "split",
@@ -507,7 +605,7 @@ export const ch05: Chapter = {
       viz: <GradientFlowDemo />,
     },
     {
-      id: "ch05-14",
+      id: "ch05-16",
       title: "Batch normalisation",
       eyebrow: "Stabilisation",
       layout: "prose",
@@ -539,7 +637,7 @@ export const ch05: Chapter = {
       ),
     },
     {
-      id: "ch05-15",
+      id: "ch05-17",
       title: "Regularisation",
       eyebrow: "Generalisation",
       layout: "split",
@@ -554,28 +652,34 @@ export const ch05: Chapter = {
             <li><strong>Dropout</strong> — zero random activations during training</li>
             <li><strong>Weight decay</strong> — add <M>{"\\lambda\\|W\\|^2"}</M> to loss</li>
             <li><strong>Early stopping</strong> — halt when val loss rises</li>
-            <li><strong>Augmentation</strong> — chapter 12</li>
+            <li><strong>Augmentation</strong> — chapter 13</li>
           </ul>
         </div>
       ),
       viz: <RegularizationViz />,
     },
     {
-      id: "ch05-16",
-      title: "Network architecture families",
-      eyebrow: "Landscape",
-      layout: "split",
+      id: "ch05-18",
+      title: "Beyond the MLP",
+      eyebrow: "Preview",
+      layout: "prose",
       content: (
-        <p>
-          Feedforward MLP for tabular data, CNN for images (chapter 7), RNN for sequences,
-          Transformer for long range dependencies, multimodal for image plus text. Choosing among them
-          encodes an assumption about the structure of the input, its inductive bias.
-        </p>
+        <div className="space-y-4">
+          <p>
+            This chapter built the universal training loop on a feedforward MLP: forward pass, loss,
+            backpropagation, optimiser step. The same loop applies to every architecture family.
+          </p>
+          <p>
+            Specialised layers change the forward pass only: convolution for local spatial structure,
+            recurrence for sequences, attention for direct links between distant positions. Chapter 6
+            covers each family with its defining operation and diagram. Chapter 7 goes deep on
+            convolution for computer vision.
+          </p>
+        </div>
       ),
-      viz: <ArchFamilyMap />,
     },
     {
-      id: "ch05-17",
+      id: "ch05-19",
       title: "PyTorch minimal example",
       eyebrow: "Code",
       layout: "scrollProse",
@@ -600,10 +704,11 @@ for x, y in loader:
       ),
     },
     {
-      id: "ch05-18",
+      id: "ch05-20",
       title: "Interactive demos",
       eyebrow: "Practice",
       layout: "prose",
+      tier: "reference",
       content: (
         <div className="space-y-4">
           <div className="flex flex-col gap-2">
@@ -623,7 +728,7 @@ for x, y in loader:
       ),
     },
     {
-      id: "ch05-19",
+      id: "ch05-21",
       title: "Chapter summary",
       eyebrow: "Summary",
       layout: "prose",
@@ -655,7 +760,7 @@ for x, y in loader:
               </tbody>
             </table>
           </div>
-          <p>Next: chapter 6 — frameworks. Chapter 7 — convolutions for images.</p>
+          <p>Next: chapter 6 — architecture families. Chapter 7 — convolutions. Chapter 8 — frameworks.</p>
         </div>
       ),
     },

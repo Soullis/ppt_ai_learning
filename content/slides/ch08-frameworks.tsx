@@ -1,31 +1,32 @@
 import type { Chapter } from "@/components/slide/types";
 import { FrameworkMap } from "@/components/viz/FrameworkMap";
 
-export const ch06: Chapter = {
-  id: "ch06",
-  number: 6,
+export const ch08: Chapter = {
+  id: "ch08",
+  number: 8,
   part: 2,
   slug: "frameworks",
   title: "Frameworks and ecosystem",
   subtitle: "Libraries that implement the training loop",
   slides: [
     {
-      id: "ch06-00",
+      id: "ch08-00",
       title: "Why frameworks",
       eyebrow: "Abstraction",
       layout: "prose",
       content: (
         <div className="space-y-4">
           <p>
-            You define the forward pass and loss. The framework provides automatic differentiation,
-            GPU kernels, data loaders, and checkpointing. Without this stack, every project would
-            reimplement backprop and CUDA bindings.
+            You know the train loop from chapter 5, architecture families from chapter 6, and
+            convolution blocks from chapter 7. A framework implements that loop on GPU: automatic
+            differentiation, tensor kernels, data loaders, and checkpointing. Without this stack,
+            every project would reimplement backprop and CUDA bindings.
           </p>
         </div>
       ),
     },
     {
-      id: "ch06-01",
+      id: "ch08-01",
       title: "Python data stack",
       eyebrow: "Classical ML",
       layout: "prose",
@@ -39,7 +40,7 @@ export const ch06: Chapter = {
       ),
     },
     {
-      id: "ch06-02",
+      id: "ch08-02",
       title: "Deep learning frameworks",
       eyebrow: "Neural nets",
       layout: "split",
@@ -62,7 +63,7 @@ export const ch06: Chapter = {
       viz: <FrameworkMap />,
     },
     {
-      id: "ch06-03",
+      id: "ch08-03",
       title: "Model hubs and deployment",
       eyebrow: "Reuse",
       layout: "prose",
@@ -76,14 +77,14 @@ export const ch06: Chapter = {
               <strong>ONNX</strong> — exchange format between frameworks
             </li>
             <li>
-              <strong>TensorRT</strong> — NVIDIA inference optimisation (chapter 13)
+              <strong>TensorRT</strong> — NVIDIA inference optimisation (chapter 14)
             </li>
           </ul>
         </div>
       ),
     },
     {
-      id: "ch06-04",
+      id: "ch08-04",
       title: "MLOps tooling",
       eyebrow: "Workflow",
       layout: "prose",
@@ -94,12 +95,12 @@ export const ch06: Chapter = {
             <li><strong>Weights & Biases</strong> — metrics, hyperparameter sweeps</li>
             <li><strong>DVC</strong> — data and model versioning in git</li>
           </ul>
-          <p className="text-muted">Chapter 12 expands the full training lifecycle.</p>
+          <p className="text-muted">Chapter 13 expands the full training lifecycle.</p>
         </div>
       ),
     },
     {
-      id: "ch06-05",
+      id: "ch08-05",
       title: "Chapter summary",
       eyebrow: "Summary",
       layout: "prose",
@@ -107,9 +108,9 @@ export const ch06: Chapter = {
         <div className="space-y-4">
           <p>
             <strong>Black Bee stack:</strong> PyTorch via Ultralytics (YOLO) and Hugging Face
-            Transformers (DETR, RF-DETR) inside Nectar.
+            Transformers (DETR, RF-DETR) inside Nectar (chapter 15).
           </p>
-          <p>Next: chapter 7 — convolutional networks for images.</p>
+          <p>Next: chapter 9 — computer vision tasks.</p>
         </div>
       ),
     },

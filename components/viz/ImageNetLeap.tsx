@@ -45,7 +45,7 @@ export function ImageNetLeap({
   const sy = (v: number) => padY + (1 - v / yMax) * innerH;
 
   return (
-    <VizFrame width={width} height={height} caption="ImageNet top-5 error · ILSVRC 2010 – 2017">
+    <VizFrame width={width} height={height} caption="ILSVRC top-5 error on ImageNet · annual classification benchmark 2010–2017">
       <svg viewBox={`0 0 ${width} ${height}`} className="h-full w-full">
         {/* Y-axis */}
         <line x1={padX} x2={padX} y1={padY} y2={padY + innerH} stroke={COLORS.ink} strokeOpacity={0.4} />

@@ -5,16 +5,17 @@ import { ch02 } from "./slides/ch02-data";
 import { ch03 } from "./slides/ch03-paradigms";
 import { ch04 } from "./slides/ch04-classical-ml";
 import { ch05 } from "./slides/ch05-deep-learning";
-import { ch06 } from "./slides/ch06-frameworks";
+import { ch06 } from "./slides/ch06-network-architectures";
 import { ch07 } from "./slides/ch07-convolutional-networks";
-import { ch08 } from "./slides/ch08-cv-tasks";
-import { ch09 } from "./slides/ch09-classification";
-import { ch10 } from "./slides/ch10-detection";
-import { ch11 } from "./slides/ch11-segmentation";
-import { ch12 } from "./slides/ch12-lifecycle";
-import { ch13 } from "./slides/ch13-deployment";
-import { ch14 } from "./slides/ch14-nectar";
-import { ch15 } from "./slides/ch15-references";
+import { ch08 } from "./slides/ch08-frameworks";
+import { ch09 } from "./slides/ch09-cv-tasks";
+import { ch10 } from "./slides/ch10-classification";
+import { ch11 } from "./slides/ch11-detection";
+import { ch12 } from "./slides/ch12-segmentation";
+import { ch13 } from "./slides/ch13-lifecycle";
+import { ch14 } from "./slides/ch14-deployment";
+import { ch15 } from "./slides/ch15-nectar";
+import { ch16 } from "./slides/ch16-references";
 import { coreSlideCount } from "@/lib/slide-filter";
 
 export const chapters: Chapter[] = [
@@ -33,6 +34,7 @@ export const chapters: Chapter[] = [
   ch13,
   ch14,
   ch15,
+  ch16,
 ];
 
 export function getChapter(slug: string) {

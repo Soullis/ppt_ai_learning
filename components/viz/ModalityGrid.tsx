@@ -127,32 +127,35 @@ export function ModalityGrid({
   return (
     <VizFrame width={width} height={height}>
       <svg viewBox={`0 0 ${width} ${height}`} className="h-full w-full">
-        {MODES.map((m, i) => (
-          <motion.g
-            key={m.label}
-            transform={`translate(${padX + i * cellW + 10}, ${padY})`}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: i * 0.15 }}
-          >
-            <text fontSize={13} fill={COLORS.ink}>
-              {m.label}
-            </text>
-            <text
-              y={16}
-              fontSize={11}
-              fontFamily="JetBrains Mono, monospace"
-              fill={COLORS.muted}
-              style={{ textTransform: "uppercase", letterSpacing: "0.12em" }}
-            >
-              {m.shape}
-            </text>
-            <g transform="translate(0, 28)">{m.draw()}</g>
-            <text y={height - padY * 2} fontSize={11} fill={COLORS.muted}>
-              {m.desc}
-            </text>
-          </motion.g>
-        ))}
+        {MODES.map((m, i) => {
+          const x = padX + i * cellW + 10;
+          return (
+            <g key={m.label} transform={`translate(${x}, ${padY})`}>
+              <motion.g
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: i * 0.15 }}
+              >
+                <text fontSize={13} fill={COLORS.ink}>
+                  {m.label}
+                </text>
+                <text
+                  y={16}
+                  fontSize={11}
+                  fontFamily="JetBrains Mono, monospace"
+                  fill={COLORS.muted}
+                  style={{ textTransform: "uppercase", letterSpacing: "0.12em" }}
+                >
+                  {m.shape}
+                </text>
+                <g transform="translate(0, 28)">{m.draw()}</g>
+                <text y={cellW - 20} fontSize={11} fill={COLORS.muted}>
+                  {m.desc}
+                </text>
+              </motion.g>
+            </g>
+          );
+        })}
       </svg>
     </VizFrame>
   );

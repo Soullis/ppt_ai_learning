@@ -4,16 +4,16 @@ import { NectarMap } from "@/components/viz/NectarMap";
 import { CodeBlock } from "@/components/ui/CodeBlock";
 import { Callout } from "@/components/ui/Callout";
 
-export const ch14: Chapter = {
-  id: "ch14",
-  number: 14,
+export const ch15: Chapter = {
+  id: "ch15",
+  number: 15,
   part: 5,
   slug: "nectar",
   title: "The Nectar AI module",
   subtitle: "Architecture and CLI",
   slides: [
     {
-      id: "ch14-00",
+      id: "ch15-00",
       title: "Module map",
       eyebrow: "nectar/nectar/ai/",
       layout: "split",
@@ -38,7 +38,7 @@ export const ch14: Chapter = {
       viz: <ModuleTree />,
     },
     {
-      id: "ch14-01",
+      id: "ch15-01",
       title: "Detector facade",
       eyebrow: "Detector",
       layout: "split",
@@ -64,7 +64,7 @@ result = detector.detect(image, conf=0.5)`}
       viz: <NectarMap />,
     },
     {
-      id: "ch14-03",
+      id: "ch15-03",
       title: "Unified API",
       eyebrow: "Interfaces",
       layout: "scrollProse",
@@ -109,7 +109,7 @@ out = detector.detect(img)`}
       ),
     },
     {
-      id: "ch14-04",
+      id: "ch15-04",
       title: "CLI tour",
       eyebrow: "CLI",
       layout: "scrollProse",
@@ -140,7 +140,7 @@ nectar-ai detect dataset upload --target huggingface \\
       ),
     },
     {
-      id: "ch14-05",
+      id: "ch15-05",
       title: "Slicing in practice",
       eyebrow: "SlicingConfig + merge strategies",
       layout: "split",
@@ -176,7 +176,7 @@ NMMStrategy        # non-maximum merging (clusters → one)`}
       ),
     },
     {
-      id: "ch14-06",
+      id: "ch15-06",
       title: "Evaluation artifacts",
       eyebrow: "Per run, on disk",
       layout: "prose",
@@ -210,7 +210,7 @@ ObjectDetectionEvaluator(detector.model, cfg).evaluate()`}
       ),
     },
     {
-      id: "ch14-07",
+      id: "ch15-07",
       title: "Black Bee case study",
       eyebrow: "IMAV 2025 — gate detection",
       layout: "prose",

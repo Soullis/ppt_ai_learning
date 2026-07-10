@@ -126,7 +126,7 @@ export const ch03: Chapter = {
           <p className="text-muted">
             On the right, MAE hides random patches and trains the network to reconstruct them. This
             is one specific pretext task. DINOv2, a self-supervised vision transformer, is the
-            backbone in RF-DETR (chapter 10).
+            backbone in RF-DETR (chapter 11).
           </p>
         </div>
       ),
