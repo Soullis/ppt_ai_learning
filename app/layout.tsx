@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AI for Aerial Robotics — Black Bee",
+  title: "Projetos com Visão Computacional e Inteligência Artificial",
   description:
-    "From perceptrons to the Nectar SDK detection workflow. A presentation on artificial intelligence for the Black Bee Drones team.",
+    "Apresentação sobre inteligência artificial pela Equipe Black Bee Drones UNFEI",
 };
 
 export default function RootLayout({

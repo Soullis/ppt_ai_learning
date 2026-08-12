@@ -34,39 +34,38 @@ export default function Cover({
         <div className="mt-16 grid grid-cols-12 gap-8 pb-12 md:mt-24">
           <div className="col-span-12 lg:col-span-6">
             <div className="mb-6 font-mono text-[11px] uppercase tracking-[0.22em] text-honey">
-              AI course material
+              Material do curso
             </div>
             <h1 className="font-serif text-[48px] font-medium leading-[0.95] tracking-tight-3 md:text-[72px]">
-              AI for Aerial Robotics
+              Inteligência Artificial e Visão Computacional
             </h1>
             <p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-muted">
-              From definitions and data to convolutional networks, detection, segmentation, and
-              the Nectar SDK workflow. Fifteen chapters in five parts.
+              Introdução, definição, problemas e aplicações sobre IA dividida em 3 partes, pela equipe Black Bee Drones.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href={`/chapter/${firstSlug}?path=lesson`}
                 className="inline-flex items-center gap-2 rounded-md border border-ink bg-ink px-4 py-2 font-mono text-[11px] uppercase tracking-[0.12em] text-surface transition hover:bg-ink/90"
               >
-                Start lesson path
+                Iniciar trilha de lição
                 <ArrowRight size={14} />
               </Link>
               <Link
                 href={`/chapter/${firstSlug}`}
                 className="inline-flex items-center gap-2 rounded-md border border-stroke bg-surface px-4 py-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted transition hover:border-ink hover:text-ink"
               >
-                Full deck
+                Deck completo
               </Link>
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-              <span>Press</span>
+              <span>Pressione</span>
               <Kbd>↓</Kbd>
-              <span>or</span>
+              <span>ou</span>
               <Kbd>→</Kbd>
-              <span>to start · </span>
+              <span>para começar · </span>
               <Kbd>↑</Kbd>
               <Kbd>↓</Kbd>
-              <span>chapters · </span>
+              <span>capítulos · </span>
               <Kbd>←</Kbd>
               <Kbd>→</Kbd>
               <span>slides</span>
@@ -75,7 +74,7 @@ export default function Cover({
 
           <div className="col-span-12 lg:col-span-6 lg:pl-8">
             <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
-              Contents {lessonMode ? "· lesson path" : "· full deck"}
+              Conteúdo {lessonMode ? "· trilha de lição" : "· deck completo"}
             </div>
             <div className="mt-4 space-y-6">
               {parts.map((part) => (
@@ -125,8 +124,8 @@ export default function Cover({
         </div>
 
         <footer className="mt-auto flex items-center justify-between border-t border-stroke pt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
-          <span>nectar-sdk · ai module</span>
-          <span>{chapters.length} chapters</span>
+          <span>nectar-sdk · módulo de IA</span>
+          <span>{chapters.length} capítulos</span>
         </footer>
       </div>
     </div>

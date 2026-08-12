@@ -9,15 +9,6 @@ import { at2 } from "./slides/at2";
 import { ref } from "./slides/references";
 import { coreSlideCount } from "@/lib/slide-filter";
 
-// eslint-disable-next-line no-console
-console.log("chapters import types:", {
-  ch00: typeof ch00,
-  ch00slug: typeof ch00.slug,
-  ch00keys: Object.keys(ch00),
-  ch00names: Object.getOwnPropertyNames(ch00),
-  ch00desc: Object.getOwnPropertyDescriptors(ch00),
-});
-
 export const chapters: Chapter[] = [
   ch00,
   ch01,

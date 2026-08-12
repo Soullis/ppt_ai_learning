@@ -1,86 +1,94 @@
 import type { Chapter } from "@/components/slide/types";
 
-const MISSION_CARDS = [
-  {
-    title: "Gate run",
-    subtitle: "O drone atravessa o gate com visão e decisão em tempo real.",
-  },
-  {
-    title: "Leitura de manômetro",
-    subtitle: "Extrair informação visual de instrumentos e transformar em ação.",
-  },
-  {
-    title: "Precision Land",
-    subtitle: "Pouso de alta precisão usando percepção de câmera e controle fino.",
-  },
-  {
-    title: "Hang the Hook",
-    subtitle: "Posicionamento exato para pendurar o gancho em um alvo móvel.",
-  },
-];
-
-const CHALLENGE_CARDS = [
-  {
-    title: "Detecção e classificação",
-    subtitle: "Zebras, manômetros e gates reconhecidos em vídeo de voo.",
-    accent: "#E5C05A",
-  },
-  {
-    title: "Navegação autônoma",
-    subtitle: "Escolha da rota, manutenção de curso e reação a obstáculos.",
-    accent: "#4EA8FF",
-  },
-  {
-    title: "Pouso de precisão",
-    subtitle: "Precision Land e Hang the Hook com visão a bordo.",
-    accent: "#7DD9A7",
-  },
+const TEAM_IMAGES = [
+  { src: "/team/photo1.jpg", alt: "Equipe de drones 1" },
+  { src: "/team/photo5.JPG", alt: "Equipe de drones 2" },
+  { src: "/team/photo3.png", alt: "Equipe de drones 3" },
+  { src: "/team/photo4.png", alt: "Equipe de drones 4" },
 ];
 
 const CHECKLIST_ITEMS = [
-  "Apresentar a equipe e a missão",
-  "Explicar drones que pensam no ar",
-  "Mostrar desafios reais de visão",
-  "Abrir a caixa preta do workflow",
-  "Deixar claro o roteiro do workshop",
+  "Quem somos e quais competições ganhamos",
+  "O que faz uma equipe de drones autônomos",
+  "Como a IA entra nas missões",
+  "O passo a passo do workshop",
+];
+
+function TeamGallery() {
+  return (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {TEAM_IMAGES.map((image) => (
+        <div key={image.src} className="overflow-hidden rounded-3xl border border-stroke bg-surface shadow-sm">
+          <div className="aspect-[4/3] w-full">
+            <img
+              src={image.src}
+              alt={image.alt}
+              className="h-full w-full object-cover"
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const MISSION_CARDS = [
+  {
+    images: [
+      { src: "/figures/animal.jpg", alt: "Detecção de animal" },
+      { src: "/figures/gauge.jpg", alt: "Detecção de painel" },
+    ],
+    title: "Detecção, identificação, classificação",
+  },
+  {
+    images: [
+      { src: "/figures/gates.jpg", alt: "Gates" },
+    ],
+    title: "Controle de Navegação",
+  },
+  {
+    images: [
+      { src: "/figures/precision_landing.jpg", alt: "Precision landing" },
+      { src: "/figures/hang_the_hook.jpg", alt: "Hang the hook" },
+    ],
+    title: "Controle de precisão",
+  },
 ];
 
 function MissionGallery() {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
       {MISSION_CARDS.map((card) => (
-        <div key={card.title} className="rounded-3xl border border-stroke bg-surface p-5 shadow-sm">
-          <div className="h-36 rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-slate-700 p-4 text-white">
-            <div className="text-sm uppercase tracking-[0.2em] text-slate-300">Portfólio</div>
-            <div className="mt-6 text-xl font-semibold">{card.title}</div>
+        <div key={card.title} className="overflow-hidden rounded-3xl border border-stroke bg-surface shadow-sm">
+          <div className="grid grid-cols-2 gap-2 bg-slate-950 p-2">
+            {card.images.map((image) => (
+              <div key={image.src} className="overflow-hidden rounded-2xl bg-slate-900">
+                <div className="aspect-[4/3] w-full">
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              </div>
+            ))}
+            {card.images.length === 1 ? <div className="rounded-2xl bg-slate-900" /> : null}
           </div>
-          <p className="mt-4 text-sm leading-6 text-muted">{card.subtitle}</p>
+          <div className="p-5">
+            <div className="text-lg font-semibold text-ink">{card.title}</div>
+          </div>
         </div>
       ))}
     </div>
   );
 }
 
-function ChallengeGallery() {
+function PresentationChecklist() {
   return (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-      {CHALLENGE_CARDS.map((card) => (
-        <div key={card.title} className="rounded-3xl border border-stroke bg-surface p-5 shadow-sm">
-          <div className="mb-4 h-2 w-16 rounded-full" style={{ backgroundColor: card.accent }} />
-          <div className="text-xl font-semibold text-ink">{card.title}</div>
-          <p className="mt-3 text-sm leading-6 text-muted">{card.subtitle}</p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function WorkshopChecklist() {
-  return (
-    <div className="space-y-4 rounded-3xl border border-stroke bg-surface p-5 shadow-sm">
-      <div className="text-sm uppercase tracking-[0.24em] text-muted">Checklist do workshop</div>
-      <ul className="space-y-3">
-        {CHECKLIST_ITEMS.map((item, index) => (
+    <div className="rounded-3xl border border-stroke bg-surface p-5 shadow-sm">
+      <div className="text-sm uppercase tracking-[0.24em] text-muted">Checklist da apresentação</div>
+      <ul className="mt-4 space-y-3">
+        {CHECKLIST_ITEMS.map((item) => (
           <li key={item}>
             <div className="flex items-start gap-4 rounded-2xl border border-stroke bg-bone px-4 py-4 text-left">
               <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full border border-ink bg-ink text-white text-[13px] font-semibold">
@@ -91,8 +99,8 @@ function WorkshopChecklist() {
           </li>
         ))}
       </ul>
-      <p className="text-sm text-muted">
-        Os tópicos acima serão abordados ao longo do workshop.
+      <p className="mt-4 text-sm text-muted">
+        Vamos marcar esses pontos à medida que avançamos no capítulo.
       </p>
     </div>
   );
@@ -108,69 +116,52 @@ export const ch00: Chapter = {
   slides: [
     {
       id: "ch00-00",
-      title: "Black Bee Drones e visão computacional",
-      eyebrow: "Abertura",
+      title: "Quem somos e o que fazemos",
+      eyebrow: "Equipe e conquistas",
       layout: "split",
       content: (
         <div className="space-y-5">
           <p>
-            Somos a primeira equipe de drones autônomos da América Latina e a mais premiada das
-            Américas. Nossa missão é provar que drones podem pensar no ar e executar missões sem
-            controle por rádio.
+            Somos a equipe de drones autônomos mais premiada das Américas. Trabalhamos com
+            missões aéreas em que os drones veem, decidem e executam sem controle por rádio.
           </p>
           <p>
-            Aqui não falamos de joystick: falamos de câmeras, redes neurais e decisões que são
-            tomadas a cada frame para manter o drone no caminho certo e cumprir a tarefa.
+            Nosso foco é usar visão computacional para detectar objetos, navegar com precisão e
+            completar tarefas complexas em ambientes reais.
           </p>
           <p className="text-muted">
-            Hoje vamos abrir a "caixa preta" e mostrar o passo a passo de como saímos do zero até uma
-            IA capaz de guiar um drone em voo real.
+            Já competimos e vencemos desafios de autonomia, navegação e inspeção, levando nossa
+            tecnologia para as principais competições da região.
           </p>
         </div>
       ),
-      viz: <MissionGallery />,
+      viz: <TeamGallery />,
     },
     {
       id: "ch00-01",
-      title: "Desafios resolvidos com câmeras",
-      eyebrow: "Aplicações reais",
-      layout: "wideViz",
-      content: (
-        <div className="space-y-5">
-          <p>
-            A visão computacional é o sensor central das nossas missões. Ela transforma pixels em
-            decisões e permite aos drones agir com autonomia.
-          </p>
-          <ul className="space-y-3 text-[15px]">
-            <li>· Detecção e classificação de objetos: zebras, manômetros e gates.</li>
-            <li>· Navegação autônoma: entender a cena, seguir o plano e desviar de obstáculos.</li>
-            <li>· Pouso de precisão: Precision Land e Hang the Hook com visão a bordo.</li>
-          </ul>
-          <p className="text-muted">
-            Esses são exemplos concretos do que nossa IA já faz em voo: ver, entender e agir.
-          </p>
-        </div>
-      ),
-      viz: <ChallengeGallery />,
+      title: "O que faz uma equipe de drones autônomos?",
+      eyebrow: "Missões inteligentes",
+      layout: "fullViz",
+      viz: <MissionGallery />,
     },
     {
       id: "ch00-02",
-      title: "Objetivo de hoje",
-      eyebrow: "Workshop",
+      title: "Checklist da apresentação",
+      eyebrow: "Gancho",
       layout: "split",
       content: (
         <div className="space-y-5">
           <p>
-            Nosso objetivo é mostrar o fluxo completo: da coleta de dados até a rede que guia o
-            drone em tempo real. Não é apenas teoria, é a prática por trás de uma missão real.
+            Neste capítulo, vamos apresentar nossa equipe, explicar o papel da IA nas missões de
+            drones e mostrar como o workshop guia você do conceito até a implementação.
           </p>
           <p className="text-muted">
-            Você vai sair com uma visão clara de como montar uma solução de IA para drones a partir
-            do zero.
+            Use a checklist ao lado para acompanhar os principais pontos que vão aparecer nos
+            próximos slides.
           </p>
         </div>
       ),
-      viz: <WorkshopChecklist />,
+      viz: <PresentationChecklist />,
     },
   ],
 };

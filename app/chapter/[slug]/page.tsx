@@ -4,13 +4,7 @@ import { chapters, getChapter, getNeighbors } from "@/content/chapters";
 import { SlideRunner } from "@/components/slide/SlideRunner";
 
 export function generateStaticParams() {
-  // eslint-disable-next-line no-console
-  console.log("generateStaticParams chapters[0]:", chapters[0]);
-  // eslint-disable-next-line no-console
-  console.log("generateStaticParams slug keys:", Object.keys(chapters[0] || {}));
   const params = chapters.map((c) => ({ slug: c.slug }));
-  // eslint-disable-next-line no-console
-  console.log("generateStaticParams slugs:", params.map((p) => ({ slug: p.slug, type: typeof p.slug })));
   return params;
 }
 

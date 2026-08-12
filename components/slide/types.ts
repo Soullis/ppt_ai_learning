@@ -40,9 +40,7 @@ export type CoursePart = {
 };
 
 export const PART_TITLES: Record<number, string> = {
-  1: "Foundations",
-  2: "Learning machinery",
-  3: "Vision tasks",
-  4: "Detection and segmentation",
-  5: "Black Bee practice",
+  1: "Apresentação",
+  2: "Atividade 1",
+  3: "Atividade 2"
 };
