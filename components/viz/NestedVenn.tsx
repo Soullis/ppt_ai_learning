@@ -1,28 +1,27 @@
 "use client";
-
 import { motion } from "framer-motion";
 import { COLORS, VizFrame } from "./common";
 
 const RINGS = [
   {
-    label: "Artificial Intelligence",
-    short: "AI",
+    label: "Inteligência Artificial",
+    short: "IA",
     r: 200,
-    sub: "Search · planning · reasoning · knowledge",
-    examples: "expert systems · A* · symbolic logic",
+    sub: "Busca · planejamento · raciocínio · conhecimento",
+    examples: "sistemas especialistas · A* · lógica simbólica",
   },
   {
     label: "Machine Learning",
     short: "ML",
     r: 140,
-    sub: "Programs that learn rules from data",
-    examples: "regression · trees · SVM · k-means",
+    sub: "Programas que aprendem regras a partir de dados",
+    examples: "regressão · árvores · SVM · k-means",
   },
   {
     label: "Deep Learning",
     short: "DL",
     r: 80,
-    sub: "Many-layered neural networks",
+    sub: "Redes neurais de muitas camadas",
     examples: "CNN · transformer · YOLO · DETR",
   },
 ];
@@ -36,9 +35,8 @@ export function NestedVenn({
 }) {
   const cx = width / 2;
   const cy = height / 2 + 18;
-
   return (
-    <VizFrame width={width} height={height} caption="AI ⊃ ML ⊃ DL">
+    <VizFrame width={width} height={height} caption="IA ⊃ ML ⊃ DL">
       <svg viewBox={`0 0 ${width} ${height}`} className="h-full w-full">
         {/* Concentric rings */}
         {RINGS.map((ring, i) => (
@@ -56,7 +54,6 @@ export function NestedVenn({
             transition={{ duration: 0.6, delay: i * 0.18 }}
           />
         ))}
-
         {/* Labels inside each ring at the top */}
         {RINGS.map((ring, i) => {
           const y = cy - ring.r + 22;
@@ -80,7 +77,6 @@ export function NestedVenn({
             </motion.text>
           );
         })}
-
         {/* Inner-most short examples list, stacked at the centre */}
         <motion.g
           initial={{ opacity: 0 }}

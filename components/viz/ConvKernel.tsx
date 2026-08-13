@@ -4,44 +4,74 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { COLORS, VizFrame } from "./common";
 import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 
-type KernelKey = "edge" | "sharpen" | "blur" | "identity";
+type KernelKey = "bordas" | "sobelX" | "sobelY" | "nitidez" | "desfoque" | "identidade";
 
 const KERNELS: Record<KernelKey, number[][]> = {
-  edge: [
+  bordas: [
     [-1, -1, -1],
     [-1, 8, -1],
     [-1, -1, -1],
   ],
-  sharpen: [
+  sobelX: [
+    [-1, 0, 1],
+    [-2, 0, 2],
+    [-1, 0, 1],
+  ],
+  sobelY: [
+    [-1, -2, -1],
+    [0, 0, 0],
+    [1, 2, 1],
+  ],
+  nitidez: [
     [0, -1, 0],
     [-1, 5, -1],
     [0, -1, 0],
   ],
-  blur: [
+  desfoque: [
     [1 / 9, 1 / 9, 1 / 9],
     [1 / 9, 1 / 9, 1 / 9],
     [1 / 9, 1 / 9, 1 / 9],
   ],
-  identity: [
+  identidade: [
     [0, 0, 0],
     [0, 1, 0],
     [0, 0, 0],
   ],
 };
 
-function genImage(N: number) {
+// What each kernel actually reveals when the input is a hand, not an
+// abstract blob — this is the point being taught, not decoration.
+const KERNEL_INFO: Record<KernelKey, string> = {
+  bordas: "realça todo contorno da mão de uma vez — a silhueta contra o fundo",
+  sobelX: "responde a bordas verticais — os dois lados de cada dedo",
+  sobelY: "responde a bordas horizontais — a junção entre dedos e palma",
+  nitidez: "acentua as bordas mantendo a mão reconhecível",
+  desfoque: "apaga a textura da pele — e some com os contornos dos dedos",
+  identidade: "kernel neutro — a imagem passa sem alteração, para comparação",
+};
+
+// A pixel-art hand silhouette: palm + four fingers rising to different
+// heights + an angled thumb. Fixed to a 16x16 grid so the shape stays
+// recognizable regardless of N.
+function isHandPixel(row: number, col: number) {
+  const palm = row >= 9 && row <= 13 && col >= 3 && col <= 11;
+  const thumb = row >= 11 && row <= 13 && col >= 1 && col <= 2;
+  const index = col === 4 && row >= 4 && row <= 8;
+  const middle = col === 6 && row >= 2 && row <= 8;
+  const ring = col === 8 && row >= 3 && row <= 8;
+  const pinky = col === 10 && row >= 6 && row <= 8;
+  return palm || thumb || index || middle || ring || pinky;
+}
+
+function genHandImage(N: number) {
   const img: number[][] = [];
   for (let i = 0; i < N; i++) {
     const row: number[] = [];
     for (let j = 0; j < N; j++) {
-      const cx = N / 2;
-      const cy = N / 2;
-      const r = Math.sqrt((i - cy) ** 2 + (j - cx) ** 2);
-      const v =
-        Math.max(0, 1 - r / (N * 0.45)) * 0.7 +
-        Math.sin(j * 0.4) * 0.1 +
-        (i % 2 === 0 ? 0.05 : 0);
-      row.push(Math.max(0, Math.min(1, v)));
+      const inside = isHandPixel(i, j);
+      const base = inside ? 0.74 : 0.06;
+      const texture = Math.sin(i * 0.7 + j * 0.5) * 0.03;
+      row.push(Math.max(0, Math.min(1, base + texture)));
     }
     img.push(row);
   }
@@ -66,9 +96,9 @@ function convolve(img: number[][], k: number[][]) {
 }
 
 export function ConvKernel({
-  N = 12,
-  width = 880,
-  height = 460,
+  N = 16,
+  width = 980,
+  height = 520,
 }: {
   N?: number;
   width?: number;
@@ -78,17 +108,18 @@ export function ConvKernel({
   const outputCanvas = useRef<HTMLCanvasElement | null>(null);
   const overlayInput = useRef<HTMLCanvasElement | null>(null);
   const overlayOutput = useRef<HTMLCanvasElement | null>(null);
-  const [kernelKey, setKernelKey] = useState<KernelKey>("edge");
+  const [kernelKey, setKernelKey] = useState<KernelKey>("bordas");
   const [pos, setPos] = useState({ i: 1, j: 1 });
   const [running, setRunning] = useState(true);
 
-  const img = useMemo(() => genImage(N), [N]);
+  const img = useMemo(() => genHandImage(N), [N]);
   const k = KERNELS[kernelKey];
   const out = useMemo(() => convolve(img, k), [img, k]);
 
+  const cell = 18;
+
   // Draw bases
   useEffect(() => {
-    const cell = 22;
     const drawGrid = (
       canvas: HTMLCanvasElement,
       grid: number[][],
@@ -139,7 +170,6 @@ export function ConvKernel({
 
   // Draw highlight overlays
   useEffect(() => {
-    const cell = 22;
     const drawHi = (canvas: HTMLCanvasElement, x: number, y: number, w: number, h: number) => {
       const ctx = canvas.getContext("2d")!;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -157,8 +187,7 @@ export function ConvKernel({
     }
   }, [pos, N]);
 
-  const cellPx = 22;
-  const px = N * cellPx;
+  const px = N * cell;
 
   return (
     <div className="flex w-full max-w-full flex-col items-center">
@@ -166,7 +195,7 @@ export function ConvKernel({
         <div className="flex h-full w-full items-center justify-center gap-8 p-6">
           <div className="flex flex-col items-center">
             <div className="mb-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-              input
+              input · mão
             </div>
             <div className="relative" style={{ width: px, height: px }}>
               <canvas
@@ -230,7 +259,12 @@ export function ConvKernel({
           </div>
         </div>
       </VizFrame>
-      <div className="mt-4 flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em]">
+
+      <div className="mt-3 max-w-[560px] text-center font-mono text-[11px] text-muted">
+        {KERNEL_INFO[kernelKey]}
+      </div>
+
+      <div className="mt-4 flex flex-wrap items-center justify-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em]">
         {(Object.keys(KERNELS) as KernelKey[]).map((kk) => (
           <button
             key={kk}

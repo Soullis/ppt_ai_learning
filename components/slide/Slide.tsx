@@ -44,7 +44,7 @@ export function Slide({ slide }: { slide: SlideType }) {
       <div
         className={cn(
           "grid min-h-0 flex-1 gap-6 md:gap-10",
-        (slide.layout === "split" || slide.layout === "scrollSplit") && "grid-cols-1 md:grid-cols-2",
+        (slide.layout === "split" || slide.layout === "scrollSplit") && "grid-cols-1 md:grid-cols-[1fr_1.5fr]",
         slide.layout === "compare" && "grid-cols-1 md:grid-cols-2",
           slide.layout === "wideViz" && "grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.85fr)]",
           (slide.layout === "fullViz" || slide.layout === "prose" || slide.layout === "scrollProse" || slide.layout === "title") &&
@@ -57,14 +57,14 @@ export function Slide({ slide }: { slide: SlideType }) {
           <div className="max-w-prose text-lg leading-relaxed text-muted">{slide.content}</div>
         ) : slide.layout === "wideViz" ? (
           <>
-            <div className="max-w-prose text-[15px] leading-relaxed text-ink/85">{slide.content}</div>
+            <div className="max-w-prose text-lg leading-relaxed text-ink/85">{slide.content}</div>
             <div className="flex min-h-0 items-stretch justify-center">{slide.viz}</div>
           </>
         ) : slide.layout === "split" || slide.layout === "compare" || slide.layout === "scrollSplit" ? (
           <>
             <div
               className={cn(
-                "max-w-prose text-[15px] leading-relaxed text-ink/85",
+                "max-w-prose text-lg leading-relaxed text-ink/85",
                 isScrollable && "min-h-0 overflow-y-auto pr-2",
               )}
             >
@@ -75,7 +75,7 @@ export function Slide({ slide }: { slide: SlideType }) {
         ) : (
           <div
             className={cn(
-              "max-w-none text-[15px] leading-relaxed text-ink/85",
+              "max-w-none text-lg leading-relaxed text-ink/85",
               slide.layout === "scrollProse" && "min-h-0 overflow-y-auto pr-2",
               slide.layout === "prose" && "max-w-prose",
             )}

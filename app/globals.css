@@ -10,7 +10,7 @@
   --font-mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
-html,
+html
 body {
   background: #fafaf7;
   color: #0e0e10;

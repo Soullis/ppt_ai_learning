@@ -16,6 +16,9 @@ const config: Config = {
         stroke: "#E5E5E0",
         accent: "#0A66C2",
         honey: "#E8B53C",
+      },fontSize: {
+        base: '1.375rem', // 22px
+        lg: '1.3rem',     // 24px
       },
       fontFamily: {
         serif: ["var(--font-serif)", "ui-serif", "Georgia", "serif"],

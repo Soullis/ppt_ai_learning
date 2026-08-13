@@ -1,7 +1,61 @@
 import type { Chapter } from "@/components/slide/types";
 import { Callout } from "@/components/ui/Callout";
-import { M } from "@/components/math/Math";
-import { ChefHat, BookOpenCheck, FlaskConical, Sparkles } from "lucide-react";
+import { BookOpenCheck, FlaskConical, Sparkles, ChefHat } from "lucide-react";
+import { NestedVenn } from "../../components/viz/NestedVenn";
+import { CookingAnalogy } from "../../components/viz/CookingAnalogy";
+import { SemanticGapMatrix } from "../../components/viz/SemanticGapMatrix";
+
+/**
+ * Vertical timeline, not a bordered grid of boxes: three stages, growing
+ * honey intensity as the system takes on more of the work itself. The
+ * connecting line is the pipeline — order carries the meaning here.
+ */
+function CookingPipeline() {
+  const stages = [
+    {
+      icon: BookOpenCheck,
+      label: "Receita pronta",
+      tag: "regra dada por nós",
+      ring: "border-white/20",
+      tone: "text-white/50",
+    },
+    {
+      icon: FlaskConical,
+      label: "Proporção deduzida",
+      tag: "regra aprendida dos exemplos",
+      ring: "border-honey/40",
+      tone: "text-honey/75",
+    },
+    {
+      icon: Sparkles,
+      label: "Processo inventado",
+      tag: "regra criada pela própria rede",
+      ring: "border-honey",
+      tone: "text-honey",
+    },
+  ];
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-2 px-4">
+      {stages.map((stage, i) => (
+        <div key={stage.label} className="flex flex-col items-center">
+          <div className="flex w-[220px] flex-col items-center gap-2 text-center">
+            <div
+              className={`flex h-14 w-14 items-center justify-center rounded-full border ${stage.ring}`}
+            >
+              <stage.icon className={`h-6 w-6 ${stage.tone}`} strokeWidth={1.5} />
+            </div>
+            <span className={`font-mono text-[11px] uppercase tracking-[0.1em] ${stage.tone}`}>
+              {stage.label}
+            </span>
+            <span className="text-[10px] text-muted">{stage.tag}</span>
+          </div>
+          {i < stages.length - 1 ? <div className="my-2 h-6 w-px bg-white/15" /> : null}
+        </div>
+      ))}
+      <ChefHat className="mt-4 h-8 w-8 text-white/25" strokeWidth={1.2} />
+    </div>
+  );
+}
 
 export const ch01: Chapter = {
   id: "ch01",
@@ -13,127 +67,38 @@ export const ch01: Chapter = {
   slides: [
     {
       id: "ch01-00",
-      title: "O que é IA, de verdade",
-      eyebrow: "Objetivo",
-      layout: "prose",
+      title: "O que é Inteligência Artificial?",
+      eyebrow: "Definições",
+      layout: "split",
       content: (
-        <div className="space-y-5">
+        <div className="space-y-4">
           <p>
-            Antes de falar de modelos, redes e treinamento, precisamos nivelar um ponto: o que
-            realmente <strong>é</strong> Inteligência Artificial — sem os robôs de ficção científica.
+            <strong>Inteligência Artificial</strong> — sistemas que percebem, raciocinam,
+            planejam e agem. Exemplos: sistemas especialistas, planejadores simbólicos,
+            programas que jogam jogos.
           </p>
-          <ul className="space-y-2 text-[15px]">
-            <li>· IA é um campo amplo, não um único tipo de sistema</li>
-            <li>· Machine Learning e Deep Learning são subconjuntos — não sinônimos — de IA</li>
-            <li>· A diferença entre eles está em <strong>como</strong> o sistema chega ao resultado</li>
-          </ul>
-          <p className="text-muted">
-            Os próximos slides constroem essa taxonomia e uma analogia para fixá-la.
+          <p>
+            <strong>Machine Learning</strong> — aprende padrões estatísticos a partir de
+            dados, em vez de regras explícitas. Melhora com mais exemplos.
+          </p>
+          <p>
+            <strong>Deep Learning</strong> — redes neurais de múltiplas camadas que
+            aprendem suas próprias características a partir de dados brutos e não estruturados
+            (imagens, áudio, texto).
           </p>
         </div>
       ),
+      viz: <NestedVenn />,
     },
     {
       id: "ch01-01",
-      title: "Taxonomia: IA, ML e DL",
-      eyebrow: "Roteiro",
-      layout: "split",
-      content: (
-        <div className="space-y-4 text-[14px]">
-          <div>
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.1em] text-honey">
-              IA — Inteligência Artificial
-            </h3>
-            <p className="mt-1 text-muted">
-              O conceito amplo. Sistemas que simulam a lógica humana — de NPCs de jogos antigos a
-              sistemas especialistas com regras escritas à mão.
-            </p>
-          </div>
-          <div>
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.1em] text-honey">
-              ML — Machine Learning
-            </h3>
-            <p className="mt-1 text-muted">
-              Estatística multivariada. A máquina não recebe as regras prontas — ela encontra
-              padrões nos dados através de semelhanças.
-            </p>
-          </div>
-          <div>
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.1em] text-honey">
-              DL — Deep Learning
-            </h3>
-            <p className="mt-1 text-muted">
-              Extração profunda de características, via redes neurais. Ideal para imagens: o
-              algoritmo aprende sozinho onde focar.
-            </p>
-          </div>
-          <p className="text-muted">
-            Cada camada está contida na anterior: <M>{"DL \\subset ML \\subset IA"}</M>.
-          </p>
-        </div>
-      ),
-      viz: (
-        <svg viewBox="0 0 400 400" className="h-full w-full">
-          <circle
-            cx="200"
-            cy="210"
-            r="170"
-            className="fill-current text-white/5 stroke-current text-white/25"
-            strokeWidth="1.5"
-          />
-          <circle
-            cx="200"
-            cy="230"
-            r="115"
-            className="fill-current text-honey/10 stroke-current text-honey/50"
-            strokeWidth="1.5"
-          />
-          <circle
-            cx="200"
-            cy="250"
-            r="60"
-            className="fill-current text-honey/25 stroke-current text-honey"
-            strokeWidth="1.5"
-          />
-          <text
-            x="200"
-            y="55"
-            textAnchor="middle"
-            className="fill-current text-white/70"
-            style={{ fontFamily: "monospace", fontSize: "13px", letterSpacing: "0.1em" }}
-          >
-            IA
-          </text>
-          <text
-            x="200"
-            y="130"
-            textAnchor="middle"
-            className="fill-current text-honey/80"
-            style={{ fontFamily: "monospace", fontSize: "13px", letterSpacing: "0.1em" }}
-          >
-            ML
-          </text>
-          <text
-            x="200"
-            y="250"
-            textAnchor="middle"
-            className="fill-current text-honey"
-            style={{ fontFamily: "monospace", fontSize: "14px", letterSpacing: "0.1em" }}
-          >
-            DL
-          </text>
-        </svg>
-      ),
-    },
-    {
-      id: "ch01-02",
       title: "A analogia do cozinheiro",
       eyebrow: "Momento didático",
       layout: "scrollSplit",
       content: (
-        <div className="space-y-5 text-[14px]">
+        <div className="space-y-5 text-[18px]">
           <section>
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
+            <h3 className="font-mono text-[13px] uppercase tracking-[0.12em] text-muted">
               Programação tradicional
             </h3>
             <p className="mt-2">
@@ -142,16 +107,17 @@ export const ch01: Chapter = {
             </p>
           </section>
           <section>
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
+            <h3 className="font-mono text-[13px] uppercase tracking-[0.12em] text-muted">
               Machine Learning
             </h3>
             <p className="mt-2">
-              O cozinheiro prova 50 bolos diferentes, anota os ingredientes de cada um e deduz uma
-              proporção matemática que funciona. Ninguém deu a receita — ele a inferiu dos exemplos.
+              O cozinheiro prova 50 bolos diferentes, anota os ingredientes de cada um e deduz
+              uma proporção matemática que funciona. Ninguém deu a receita — ele a inferiu dos
+              exemplos.
             </p>
           </section>
           <section>
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
+            <h3 className="font-mono text-[13px] uppercase tracking-[0.12em] text-muted">
               Deep Learning
             </h3>
             <p className="mt-2">
@@ -165,29 +131,32 @@ export const ch01: Chapter = {
           </section>
         </div>
       ),
-      viz: (
-        <div className="flex h-full flex-col items-center justify-center gap-8 px-4">
-          <div className="flex items-center gap-3">
-            <BookOpenCheck className="h-8 w-8 text-white/50" strokeWidth={1.5} />
-            <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted">
-              Receita pronta
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <FlaskConical className="h-8 w-8 text-honey/70" strokeWidth={1.5} />
-            <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-honey/80">
-              Proporção deduzida
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Sparkles className="h-8 w-8 text-honey" strokeWidth={1.5} />
-            <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-honey">
-              Processo inventado
-            </span>
-          </div>
-          <ChefHat className="mt-2 h-10 w-10 text-white/30" strokeWidth={1.2} />
+      viz: <CookingAnalogy />,
+    }, {
+      id: "ch01-02",
+      title: "O que a máquina realmente vê?",
+      eyebrow: "A Lacuna Semântica",
+      layout: "split",
+      content: (
+        <div className="space-y-4">
+          <p>
+            Para nós, reconhecer um obstáculo é instintivo. Para o drone, a câmera entrega
+            apenas "ingredientes crus": uma matriz de números $I(x, y) = [R, G, B]$.
+          </p>
+          <p>
+            Cada pixel da imagem carrega três valores de intensidade (Vermelho, Verde e Azul). 
+            Como vemos ao lado, é exatamente assim — como uma grade numérica fria — que a máquina 
+            enxerga o mundo.
+          </p>
+          <Callout label="A falha das regras fixas">
+            Se uma nuvem passar e escurecer a imagem, todos esses números mudam instantaneamente. 
+            É por isso que a Visão Computacional precisa do <em>Deep Learning</em>: para aprender a 
+            identificar padrões (bordas e formas) no meio dessa matriz, em vez de depender de "receitas prontas" que quebram com qualquer sombra.
+          </Callout>
         </div>
       ),
+      viz: <SemanticGapMatrix />,
     },
+
   ],
 };
