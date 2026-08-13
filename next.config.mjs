@@ -1,12 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  // Emit a self-contained build at .next/standalone, copied by the Dockerfile.
-  // Required for serving on Hugging Face Spaces with the Docker SDK.
-  output: "export",
+  output: 'export',
   basePath: '/ppt_ai_learning',
   images: {
-    unoptimized: true,
+    unoptimized: true, // Prevents errors if you use <Image /> tags
   },
 };
 
