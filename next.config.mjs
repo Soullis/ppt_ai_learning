@@ -2,8 +2,9 @@
 const nextConfig = {
   output: 'export',
   basePath: '/ppt_ai_learning',
+  assetPrefix: '/ppt_ai_learning/', // Add this line
   images: {
-    unoptimized: true, // Prevents errors if you use <Image /> tags
+    unoptimized: true,
   },
 };
 
