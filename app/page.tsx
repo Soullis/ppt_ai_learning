@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { chapters, getParts, chapterStats } from "@/content/chapters";
@@ -9,21 +10,16 @@ import { Kbd } from "@/components/ui/Kbd";
 import { CoverKeys } from "@/components/chrome/CoverKeys";
 import { chapterHref } from "@/lib/slide-filter";
 
-export default function Cover({
-  searchParams,
-}: {
-  searchParams?: { path?: string };
-}) {
-  const lessonMode = searchParams?.path === "lesson";
+function CoverContent() {
+  const searchParams = useSearchParams();
+  const lessonMode = searchParams.get("path") === "lesson";
   const path = lessonMode ? "lesson" : "full";
   const parts = getParts();
   const firstSlug = chapters[0].slug;
 
   return (
-    <div className="relative min-h-screen bg-bone">
-      <Suspense fallback={null}>
-        <CoverKeys firstSlug={firstSlug} lessonPath={path} />
-      </Suspense>
+    <>
+      <CoverKeys firstSlug={firstSlug} lessonPath={path} />
       <div className="pointer-events-none absolute inset-0 bg-grid opacity-60" />
       <div className="relative mx-auto flex min-h-screen w-full max-w-[1440px] flex-col px-6 py-10 md:px-8">
         <header className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
@@ -128,6 +124,16 @@ export default function Cover({
           <span>{chapters.length} capítulos</span>
         </footer>
       </div>
+    </>
+  );
+}
+
+export default function Cover() {
+  return (
+    <div className="relative min-h-screen bg-bone">
+      <Suspense fallback={null}>
+        <CoverContent />
+      </Suspense>
     </div>
   );
 }
