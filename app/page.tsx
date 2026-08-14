@@ -133,17 +133,11 @@ function CoverContent() {
   );
 }
 
-<<<<<<< HEAD
 // 2. O componente principal agora apenas provê o Suspense
 export default function Cover() {
   return (
     <div className="relative min-h-screen bg-bone">
       {/* O fallback vazio evita flashes na tela enquanto o hook carrega os parâmetros */}
-=======
-export default function Cover() {
-  return (
-    <div className="relative min-h-screen bg-bone">
->>>>>>> 2b3d6c5
       <Suspense fallback={null}>
         <CoverContent />
       </Suspense>
