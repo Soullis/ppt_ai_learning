@@ -4,7 +4,6 @@ import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { useSearchParams } from "next/navigation"; // <-- Novo import
 import { chapters, getParts, chapterStats } from "@/content/chapters";
 import { pad } from "@/lib/utils";
 import { Kbd } from "@/components/ui/Kbd";

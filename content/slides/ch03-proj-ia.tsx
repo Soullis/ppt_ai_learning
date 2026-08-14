@@ -7,10 +7,10 @@ import {
   CheckCircle2,
   AlertTriangle,
   Target,
-  Maximize, 
-  MousePointer2, 
-  Crosshair, 
-  PieChart, 
+  Maximize,
+  MousePointer2,
+  Crosshair,
+  PieChart,
   Wand2,
   Stethoscope,
   Table,
@@ -24,6 +24,24 @@ import { AugmentationGallery } from "@/components/viz/AugmentationGallery";
 import { SplitBar } from "@/components/viz/SplitBar";
 import { PrecisionRecallSandbox } from "@/components/viz/PrecisionRecallSandbox";
 import { ConfusionMatrix } from "@/components/viz/ConfusionMatrix";
+import { Pipeline } from "@/components/viz/Pipeline";
+import { NoiseVsClean } from "@/components/viz/NoiseVsClean";
+import { BiasVariance } from "@/components/viz/BiasVariance";
+
+const passosDaIA = [
+  {
+    label: "Coleta",
+    detail: "Captura de dados brutos"
+  },
+  {
+    label: "Treinamento",
+    detail: "Ajuste do modelo de IA"
+  },
+  {
+    label: "Avaliação",
+    detail: "Análise de métricas"
+  }
+];
 
 export const ch03: Chapter = {
   id: "ch03",
@@ -39,7 +57,7 @@ export const ch03: Chapter = {
       eyebrow: "Visão geral",
       layout: "split",
       content: (
-        <div className="space-y-4 text-[14px]">
+        <div className="space-y-4">
           <p>
             Todo projeto de visão computacional na Black Bee segue um fluxo lógico. Cada
             etapa é dependente do sucesso da etapa anterior.
@@ -57,20 +75,7 @@ export const ch03: Chapter = {
           </ul>
         </div>
       ),
-      viz: (
-        <div className="flex h-full items-center justify-center gap-3 px-4">
-          {["Coleta", "Treinamento", "Métricas"].map((step, i) => (
-            <div key={step} className="flex items-center gap-3">
-              <div className="rounded-md border border-stroke px-4 py-3 text-center">
-                <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-honey">
-                  {step}
-                </span>
-              </div>
-              {i < 2 && <ArrowRight className="h-5 w-5 text-white/30" strokeWidth={1.5} />}
-            </div>
-          ))}
-        </div>
-      ),
+      viz: < Pipeline steps={passosDaIA} width={880} height={220} />,
     },
     {
       id: "ch03-01",
@@ -78,7 +83,7 @@ export const ch03: Chapter = {
       eyebrow: "Fase 1: Coleta",
       layout: "split",
       content: (
-        <div className="space-y-4 text-[14px]">
+        <div className="space-y-4">
           <p>
             Para que a rede neural consiga extrair boas características de um objeto (como um
             gate ou zebra), ela precisa ser exposta à diversidade.
@@ -94,15 +99,23 @@ export const ch03: Chapter = {
         </div>
       ),
       viz: (
-        <div className="flex h-full flex-col items-center justify-center rounded-md border border-dashed border-white/20 bg-white/5 p-6 text-center">
-          <Maximize className="mb-4 h-8 w-8 text-white/40" />
-          <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted">
-            💡 Ideia de UI: Galeria 3x3
-          </span>
-          <p className="mt-2 text-[12px] text-white/60">
-            Mostrar um grid com o mesmo objeto (ex: Gate) em 3 iluminações diferentes
-            (linha) e 3 ângulos diferentes (coluna).
-          </p>
+        <div className="grid h-full grid-cols-3 grid-rows-2 gap-2 rounded-md border border-white/10 bg-white/5 p-2">
+          {Array.from({ length: 6 }, (_, i) => i + 1).map((n) => (
+            <div
+              key={n}
+              className="group relative overflow-hidden rounded-sm border border-white/10"
+            >
+              <img
+                src={`/figures/gate${n}.jpg`}
+                alt={`Gate - variação ${n}`}
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                loading="lazy"
+              />
+              <span className="absolute bottom-0 right-0 bg-black/60 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-white/70">
+                {n}
+              </span>
+            </div>
+          ))}
         </div>
       ),
     },
@@ -112,36 +125,27 @@ export const ch03: Chapter = {
       eyebrow: "Limpeza de dados",
       layout: "split",
       content: (
-        <div className="space-y-4 text-[14px]">
+        <div className="space-y-4">
           <p>
-            Tão importante quanto coletar muitas imagens, é eliminar o <strong>"barulho" (noise)</strong> do dataset.
+            Após o fluxo de anotação no Roboflow, estas são as principais fontes de ruído que prejudicam a performance do modelo:
           </p>
-          <p>O que são imagens com ruído?</p>
           <ul className="space-y-2">
             <li>
-              <strong>Imagens borradas:</strong> Causadas pela vibração do drone ou movimento rápido.
+              <strong>Rotulagem incorreta:</strong> Gate anotado como post — o modelo aprende a associação errada.
             </li>
             <li>
-              <strong>Informações inúteis:</strong> Fotos onde o objeto está coberto por alguém, ou tão distante que é impossível distinguir.
+              <strong>Bounding box imprecisa:</strong> A caixa inclui muito fundo — o detector aprende uma localização imprecisa.
+            </li>
+            <li>
+              <strong>Frames borrados ou escuros mantidos:</strong> O modelo aprende características que não aparecerão na inferência.
+            </li>
+            <li>
+              <strong>Frames quase duplicados:</strong> Inflam a contagem de amostras sem adicionar diversidade real ao dataset.
             </li>
           </ul>
-          <p className="text-muted">
-            Manter essas imagens no treinamento confunde a rede neural, pois ela tenta achar padrões em borrões onde não existem características reais.
-          </p>
         </div>
       ),
-      viz: (
-        <div className="flex h-full flex-col items-center justify-center rounded-md border border-dashed border-white/20 bg-white/5 p-6 text-center">
-          <ImageOff className="mb-4 h-8 w-8 text-white/40" />
-          <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted">
-            💡 Ideia de UI: Slider "Antes e Depois"
-          </span>
-          <p className="mt-2 text-[12px] text-white/60">
-            Colocar uma imagem totalmente borrada do drone (marcada com um 'X' vermelho)
-            ao lado de uma imagem nítida tratada (marcada com um check verde).
-          </p>
-        </div>
-      ),
+      viz: < NoiseVsClean />,
     },
     {
       id: "ch03-03",
@@ -149,12 +153,12 @@ export const ch03: Chapter = {
       eyebrow: "Os extremos do treinamento",
       layout: "scrollSplit",
       content: (
-        <div className="space-y-5 text-[14px]">
+        <div className="space-y-5">
           <p>
             O objetivo de todo modelo de IA é encontrar o ponto de equilíbrio: queremos um modelo abrangente, mas preciso.
           </p>
           <section>
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.12em] text-honey">
+            <h3 className="font-mono uppercase tracking-[0.12em] text-honey">
               Generalização e Alucinação
             </h3>
             <p className="mt-2">
@@ -162,7 +166,7 @@ export const ch03: Chapter = {
             </p>
           </section>
           <section>
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.12em] text-honey">
+            <h3 className="font-mono uppercase tracking-[0.12em] text-honey">
               Especialização e Overfitting
             </h3>
             <p className="mt-2">
@@ -174,26 +178,14 @@ export const ch03: Chapter = {
           </Callout>
         </div>
       ),
-      viz: (
-        <div className="flex h-full flex-col items-center justify-center rounded-md border border-dashed border-white/20 bg-white/5 p-6 text-center">
-          <Target className="mb-4 h-8 w-8 text-white/40" />
-          <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted">
-            💡 Ideia de UI: O Gráfico do Alvo
-          </span>
-          <p className="mt-2 text-[12px] text-white/60">
-            Desenhar uma curva em 'U'. Lado esquerdo: Alucinação (ver coisas).
-            Lado direito: Overfitting (decorar cenário).
-            No centro do vale: O "Sweet Spot" brilhando em amarelo.
-          </p>
-        </div>
-      ),
+      viz: < BiasVariance />
     }, {
       id: "ch03-04",
       title: "Anotando imagens no Roboflow",
       eyebrow: "O trabalho braçal",
       layout: "split",
       content: (
-        <div className="space-y-4 text-[14px]">
+        <div className="space-y-4">
           <p>
             Anotar uma imagem significa dizer explicitamente para a IA onde está o objeto
             de interesse e o que ele é.
@@ -210,16 +202,10 @@ export const ch03: Chapter = {
         </div>
       ),
       viz: (
-        <div className="flex h-full flex-col items-center justify-center rounded-md border border-dashed border-white/20 bg-white/5 p-6 text-center">
-          <Crosshair className="mb-4 h-8 w-8 text-white/40" />
-          <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted">
-            🎬 Espaço para Vídeo / GIF
-          </span>
-          <p className="mt-2 text-[12px] text-white/60">
-            Gravação de tela mostrando a interface do Roboflow e o cursor
-            desenhando uma bounding box ao redor de um obstáculo.
-          </p>
-        </div>
+        <img
+          src="/figures/anotating.gif"
+          className="h-full w-full rounded-xl object-cover"
+        />
       ),
     },
     {
@@ -228,7 +214,7 @@ export const ch03: Chapter = {
       eyebrow: "Treino, Validação e Teste",
       layout: "split",
       content: (
-        <div className="space-y-4 text-[14px]">
+        <div className="space-y-4">
           <p>
             Nunca mostramos todas as imagens para a IA de uma vez. Dividimos nossos dados
             em três blocos para garantir que ela não está apenas "decorando" as respostas.
@@ -254,7 +240,7 @@ export const ch03: Chapter = {
       eyebrow: "Multiplicando dados",
       layout: "split",
       content: (
-        <div className="space-y-4 text-[14px]">
+        <div className="space-y-4">
           <p>
             Ter milhares de imagens boas é difícil e demorado. O <strong>Data Augmentation</strong> (Aumento de Dados)
             resolve isso aplicando modificações matemáticas nas imagens originais para gerar variações.
@@ -275,9 +261,9 @@ export const ch03: Chapter = {
       id: "ch03-07",
       title: "Motivações e Riscos",
       eyebrow: "O custo do erro",
-      layout: "split",
+      layout: "prose",
       content: (
-        <div className="space-y-4 text-[14px]">
+        <div className="space-y-4">
           <p>
             Antes de olhar os números, precisamos perguntar: <strong>qual erro custa mais caro?</strong>
           </p>
@@ -297,19 +283,6 @@ export const ch03: Chapter = {
           </p>
         </div>
       ),
-      viz: (
-        <div className="flex h-full flex-col items-center justify-center rounded-md border border-dashed border-white/20 bg-white/5 p-6 text-center">
-          <Stethoscope className="mb-4 h-8 w-8 text-white/40" />
-          <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted">
-            💡 Ideia de UI: O Raio-X Interativo
-          </span>
-          <p className="mt-2 text-[12px] text-white/60">
-            Um exame de imagem onde o usuário clica em "Detectar".
-            A UI mostra o modelo circulando áreas saudáveis (FP) ou ignorando tumores reais (FN),
-            provocando a reflexão sobre qual erro é pior.
-          </p>
-        </div>
-      ),
     },
     {
       id: "ch03-08",
@@ -317,7 +290,7 @@ export const ch03: Chapter = {
       eyebrow: "Metrificando o Risco",
       layout: "split",
       content: (
-        <div className="space-y-4 text-[14px]">
+        <div className="space-y-4">
           <p>
             A <strong>Matriz de Confusão</strong> é a ferramenta base para visualizar onde o modelo
             está se confundindo. Ela cruza a Realidade com a Predição.
@@ -342,9 +315,9 @@ export const ch03: Chapter = {
       eyebrow: "As Três Leis",
       layout: "scrollSplit",
       content: (
-        <div className="space-y-5 text-[14px]">
+        <div className="space-y-5">
           <section>
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.12em] text-honey">
+            <h3 className="font-mono uppercase tracking-[0.12em] text-honey">
               Precision (Precisão)
             </h3>
             <p className="mt-1">
@@ -353,7 +326,7 @@ export const ch03: Chapter = {
             </p>
           </section>
           <section>
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.12em] text-honey">
+            <h3 className="font-mono uppercase tracking-[0.12em] text-honey">
               Recall (Revocação)
             </h3>
             <p className="mt-1">
@@ -362,7 +335,7 @@ export const ch03: Chapter = {
             </p>
           </section>
           <section>
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.12em] text-honey">
+            <h3 className="font-mono uppercase tracking-[0.12em] text-honey">
               F1-Score
             </h3>
             <p className="mt-1">

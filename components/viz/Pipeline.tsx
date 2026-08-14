@@ -6,14 +6,24 @@ import { COLORS, VizFrame } from "./common";
 export type PipelineStep = { label: string; detail?: string };
 
 export function Pipeline({
-  steps,
+  steps = [],
   width = 880,
   height = 220,
 }: {
-  steps: PipelineStep[];
+  steps?: PipelineStep[];
   width?: number;
   height?: number;
 }) {
+  // 2. Added early return to prevent division by zero if steps is empty
+  if (steps.length === 0) {
+    return (
+      <VizFrame width={width} height={height}>
+        <div className="flex h-full items-center justify-center font-mono text-[12px] text-muted uppercase tracking-[0.12em]">
+          No steps provided
+        </div>
+      </VizFrame>
+    );
+  }
   const padX = 40;
   const innerW = width - padX * 2;
   const stepW = innerW / steps.length;
