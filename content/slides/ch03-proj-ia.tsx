@@ -7,8 +7,23 @@ import {
   CheckCircle2,
   AlertTriangle,
   Target,
-  Maximize,MousePointer2, Crosshair, PieChart, Wand2,
+  Maximize, 
+  MousePointer2, 
+  Crosshair, 
+  PieChart, 
+  Wand2,
+  Stethoscope,
+  Table,
+  Scale,
+  ScanSearch,
+  Percent,
+  Activity
 } from "lucide-react";
+
+import { AugmentationGallery } from "@/components/viz/AugmentationGallery";
+import { SplitBar } from "@/components/viz/SplitBar";
+import { PrecisionRecallSandbox } from "@/components/viz/PrecisionRecallSandbox";
+import { ConfusionMatrix } from "@/components/viz/ConfusionMatrix";
 
 export const ch03: Chapter = {
   id: "ch03",
@@ -85,7 +100,7 @@ export const ch03: Chapter = {
             💡 Ideia de UI: Galeria 3x3
           </span>
           <p className="mt-2 text-[12px] text-white/60">
-            Mostrar um grid com o mesmo objeto (ex: Gate) em 3 iluminações diferentes 
+            Mostrar um grid com o mesmo objeto (ex: Gate) em 3 iluminações diferentes
             (linha) e 3 ângulos diferentes (coluna).
           </p>
         </div>
@@ -166,13 +181,13 @@ export const ch03: Chapter = {
             💡 Ideia de UI: O Gráfico do Alvo
           </span>
           <p className="mt-2 text-[12px] text-white/60">
-            Desenhar uma curva em 'U'. Lado esquerdo: Alucinação (ver coisas). 
-            Lado direito: Overfitting (decorar cenário). 
+            Desenhar uma curva em 'U'. Lado esquerdo: Alucinação (ver coisas).
+            Lado direito: Overfitting (decorar cenário).
             No centro do vale: O "Sweet Spot" brilhando em amarelo.
           </p>
         </div>
       ),
-    },{
+    }, {
       id: "ch03-04",
       title: "Anotando imagens no Roboflow",
       eyebrow: "O trabalho braçal",
@@ -184,8 +199,8 @@ export const ch03: Chapter = {
             de interesse e o que ele é.
           </p>
           <p>
-            Utilizamos o <strong>Roboflow</strong> para desenhar <em>bounding boxes</em> (caixas delimitadoras) 
-            ao redor de cada alvo. Essa é a base do aprendizado supervisionado: 
+            Utilizamos o <strong>Roboflow</strong> para desenhar <em>bounding boxes</em> (caixas delimitadoras)
+            ao redor de cada alvo. Essa é a base do aprendizado supervisionado:
             nós damos o gabarito para a máquina aprender.
           </p>
           <Callout label="Atenção aos detalhes">
@@ -201,7 +216,7 @@ export const ch03: Chapter = {
             🎬 Espaço para Vídeo / GIF
           </span>
           <p className="mt-2 text-[12px] text-white/60">
-            Gravação de tela mostrando a interface do Roboflow e o cursor 
+            Gravação de tela mostrando a interface do Roboflow e o cursor
             desenhando uma bounding box ao redor de um obstáculo.
           </p>
         </div>
@@ -231,18 +246,7 @@ export const ch03: Chapter = {
           </ul>
         </div>
       ),
-      viz: (
-        <div className="flex h-full flex-col items-center justify-center rounded-md border border-dashed border-white/20 bg-white/5 p-6 text-center">
-          <PieChart className="mb-4 h-8 w-8 text-white/40" />
-          <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted">
-            💡 Ideia de UI: Barra de Proporção
-          </span>
-          <p className="mt-2 text-[12px] text-white/60">
-            Uma barra horizontal dividida visualmente (ex: 70% amarelo, 20% cinza claro, 10% cinza escuro), 
-            ilustrando os volumes de dados com ícones de caderno (treino), prancheta (validação) e alvo (teste).
-          </p>
-        </div>
-      ),
+      viz: < SplitBar />,
     },
     {
       id: "ch03-06",
@@ -252,7 +256,7 @@ export const ch03: Chapter = {
       content: (
         <div className="space-y-4 text-[14px]">
           <p>
-            Ter milhares de imagens boas é difícil e demorado. O <strong>Data Augmentation</strong> (Aumento de Dados) 
+            Ter milhares de imagens boas é difícil e demorado. O <strong>Data Augmentation</strong> (Aumento de Dados)
             resolve isso aplicando modificações matemáticas nas imagens originais para gerar variações.
           </p>
           <p>
@@ -260,23 +264,115 @@ export const ch03: Chapter = {
             nós "enganamos" a IA, simulando novos cenários e ângulos.
           </p>
           <p className="text-muted">
-            Isso força a rede a aprender as características reais do objeto (formato, textura) 
+            Isso força a rede a aprender as características reais do objeto (formato, textura)
             em vez de memorizar a foto exata. O resultado é um modelo muito mais resiliente para voar.
+          </p>
+        </div>
+      ),
+      viz: <AugmentationGallery />,
+    },
+    {
+      id: "ch03-07",
+      title: "Motivações e Riscos",
+      eyebrow: "O custo do erro",
+      layout: "split",
+      content: (
+        <div className="space-y-4 text-[14px]">
+          <p>
+            Antes de olhar os números, precisamos perguntar: <strong>qual erro custa mais caro?</strong>
+          </p>
+          <p>
+            Em um cenário médico (como detecção de câncer), os riscos são assimétricos:
+          </p>
+          <ul className="space-y-2">
+            <li>
+              <strong className="text-red-400">Falso Negativo:</strong> Dizer que o paciente está saudável quando ele está doente. É o erro fatal: o tratamento não começa.
+            </li>
+            <li>
+              <strong className="text-orange-400">Falso Positivo:</strong> Dizer que o paciente está doente quando ele está saudável. Gera estresse e exames desnecessários, mas não é fatal.
+            </li>
+          </ul>
+          <p className="text-muted italic">
+            No drone, um falso negativo (não ver o obstáculo) significa colisão. Um falso positivo (ver onde não tem) significa um desvio brusco no vazio.
           </p>
         </div>
       ),
       viz: (
         <div className="flex h-full flex-col items-center justify-center rounded-md border border-dashed border-white/20 bg-white/5 p-6 text-center">
-          <Wand2 className="mb-4 h-8 w-8 text-white/40" />
+          <Stethoscope className="mb-4 h-8 w-8 text-white/40" />
           <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted">
-            💡 Ideia de UI: Fluxo de Transformação
+            💡 Ideia de UI: O Raio-X Interativo
           </span>
           <p className="mt-2 text-[12px] text-white/60">
-            Uma imagem original no centro conectada por setas a 4 variações ao redor: 
-            uma imagem girada, uma com muito contraste, uma borrada e uma espelhada.
+            Um exame de imagem onde o usuário clica em "Detectar".
+            A UI mostra o modelo circulando áreas saudáveis (FP) ou ignorando tumores reais (FN),
+            provocando a reflexão sobre qual erro é pior.
           </p>
         </div>
       ),
-    }
+    },
+    {
+      id: "ch03-08",
+      title: "Matriz de Confusão",
+      eyebrow: "Metrificando o Risco",
+      layout: "split",
+      content: (
+        <div className="space-y-4 text-[14px]">
+          <p>
+            A <strong>Matriz de Confusão</strong> é a ferramenta base para visualizar onde o modelo
+            está se confundindo. Ela cruza a Realidade com a Predição.
+          </p>
+          <ul className="grid grid-cols-1 gap-2 text-muted">
+            <li><strong>Verdadeiro Positivo (VP):</strong> Acertou o alvo.</li>
+            <li><strong>Verdadeiro Negativo (VN):</strong> Acertou o vazio.</li>
+            <li><strong>Falso Positivo (FP):</strong> Alucinou um alvo.</li>
+            <li><strong>Falso Negativo (FN):</strong> Comeu mosca (não viu).</li>
+          </ul>
+          <Callout label="Otimização">
+            Ao mover os "sliders" de confiança do modelo, nós movemos os dados entre esses quadrantes.
+            Mudar a sensibilidade do drone altera diretamente essa matriz.
+          </Callout>
+        </div>
+      ),
+      viz: < ConfusionMatrix />,
+    },
+    {
+      id: "ch03-09",
+      title: "Precision, Recall e F1-Score",
+      eyebrow: "As Três Leis",
+      layout: "scrollSplit",
+      content: (
+        <div className="space-y-5 text-[14px]">
+          <section>
+            <h3 className="font-mono text-[11px] uppercase tracking-[0.12em] text-honey">
+              Precision (Precisão)
+            </h3>
+            <p className="mt-1">
+              "De tudo que eu disse que era um objeto, quanto eu realmente acertei?"
+              Foca na <strong>qualidade</strong>.
+            </p>
+          </section>
+          <section>
+            <h3 className="font-mono text-[11px] uppercase tracking-[0.12em] text-honey">
+              Recall (Revocação)
+            </h3>
+            <p className="mt-1">
+              "De todos os objetos que existiam na frente do drone, quantos eu consegui achar?"
+              Foca na <strong>quantidade</strong>.
+            </p>
+          </section>
+          <section>
+            <h3 className="font-mono text-[11px] uppercase tracking-[0.12em] text-honey">
+              F1-Score
+            </h3>
+            <p className="mt-1">
+              A média harmônica entre os dois. É o equilíbrio para quando você quer um modelo
+              que não seja nem mentiroso (Precision), nem cego (Recall).
+            </p>
+          </section>
+        </div>
+      ),
+      viz: < PrecisionRecallSandbox />,
+    },
   ],
 };

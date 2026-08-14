@@ -4,15 +4,19 @@ import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { useSearchParams } from "next/navigation"; // <-- Novo import
 import { chapters, getParts, chapterStats } from "@/content/chapters";
 import { pad } from "@/lib/utils";
 import { Kbd } from "@/components/ui/Kbd";
 import { CoverKeys } from "@/components/chrome/CoverKeys";
 import { chapterHref } from "@/lib/slide-filter";
 
+// 1. Movemos toda a lógica visual para este sub-componente
 function CoverContent() {
   const searchParams = useSearchParams();
-  const lessonMode = searchParams.get("path") === "lesson";
+  const pathParam = searchParams.get("path"); // <-- Lendo o parâmetro via hook
+  
+  const lessonMode = pathParam === "lesson";
   const path = lessonMode ? "lesson" : "full";
   const parts = getParts();
   const firstSlug = chapters[0].slug;
@@ -20,6 +24,7 @@ function CoverContent() {
   return (
     <>
       <CoverKeys firstSlug={firstSlug} lessonPath={path} />
+      
       <div className="pointer-events-none absolute inset-0 bg-grid opacity-60" />
       <div className="relative mx-auto flex min-h-screen w-full max-w-[1440px] flex-col px-6 py-10 md:px-8">
         <header className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
@@ -128,9 +133,17 @@ function CoverContent() {
   );
 }
 
+<<<<<<< HEAD
+// 2. O componente principal agora apenas provê o Suspense
 export default function Cover() {
   return (
     <div className="relative min-h-screen bg-bone">
+      {/* O fallback vazio evita flashes na tela enquanto o hook carrega os parâmetros */}
+=======
+export default function Cover() {
+  return (
+    <div className="relative min-h-screen bg-bone">
+>>>>>>> 2b3d6c5
       <Suspense fallback={null}>
         <CoverContent />
       </Suspense>

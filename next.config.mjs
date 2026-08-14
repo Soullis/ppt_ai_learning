@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
-  basePath: '/ppt_ai_learning',
-  assetPrefix: '/ppt_ai_learning/', // Add this line
+  reactStrictMode: true,
+  // Emit a self-contained build at .next/standalone, copied by the Dockerfile.
+  // Required for serving on Hugging Face Spaces with the Docker SDK.
+  output: "export",
   images: {
     unoptimized: true,
   },

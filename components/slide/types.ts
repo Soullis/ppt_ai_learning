@@ -41,6 +41,6 @@ export type CoursePart = {
 
 export const PART_TITLES: Record<number, string> = {
   1: "Apresentação",
-  2: "Atividade 1",
-  3: "Atividade 2"
+  2: "Workshop",
+  3: "Referências"
 };
